@@ -1,0 +1,13 @@
+---
+# Setup infrastructure for testing role
+
+# Apply role to test VMs,
+# host-vars are used to control which features of the role are applied to each VM.
+# For each test a set of tasks will be run to check the selected features of roles are correctly applied.
+
+- name: setup and test the system users role
+  hosts: barc-system-users-test-nodes-local
+  remote_user: controller
+  become: yes
+  roles:
+    - ../../../system-users

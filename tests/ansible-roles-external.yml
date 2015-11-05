@@ -1,0 +1,7 @@
+---
+
+-
+    src: https://github.com/antarctica/ansible-bootstrap-vagrant
+    name: bootstrap-vagrant
+    version: v2.0.0
+

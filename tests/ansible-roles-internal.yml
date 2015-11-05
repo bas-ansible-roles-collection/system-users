@@ -1,0 +1,5 @@
+---
+
+-
+    src: git+ssh://git@stash.ceh.ac.uk:7999/barc/bootstrap-vagrant.git
+    version: v2.0.0

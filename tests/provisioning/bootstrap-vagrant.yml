@@ -1,0 +1,12 @@
+---
+# Bootstraps a VM for configuration by Ansible - this only needs to be run once per host
+
+# Do not change the hosts value for this playbook - Vagrant will pass a special inventory file with suitable connection
+# details automatically. Changing this value will prevent this dynamic inventory being used and cause a fatal error.
+
+- name: setup vm's ready for ansible
+  hosts: all
+  remote_user: vagrant
+  sudo: yes
+  roles:
+  - bootstrap-vagrant

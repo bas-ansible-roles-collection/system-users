@@ -1,0 +1,9 @@
+---
+# These variables override those defined by roles
+
+# Generic
+project_hostname_project: "barc-system-users"
+project_repository: "git@github.com:antarctica/barc-system-users.git"
+
+# BARC roles
+barc_role_name: system-users
