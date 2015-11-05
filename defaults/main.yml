@@ -1,0 +1,4 @@
+---
+# Default variables - inventory or playbook overrides will be respected
+
+system_users_users: []
