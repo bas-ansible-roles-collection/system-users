@@ -8,6 +8,6 @@
 - name: setup and test the system users role
   hosts: local
   become: yes
-  varss: []
+  vars: []
   roles:
     - ~/system-users
