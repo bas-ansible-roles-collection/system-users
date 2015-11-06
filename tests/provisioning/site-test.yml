@@ -13,3 +13,5 @@
   become: yes
   roles:
     - ../../../system-users
+  tasks:
+    - include: ../tasks/main.yml
