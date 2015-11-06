@@ -5,9 +5,11 @@
 # host-vars are used to control which features of the role are applied to each VM.
 # For each test a set of tasks will be run to check the selected features of roles are correctly applied.
 
+# Note: This playbook does not use the conventional 'controller' user as this role creates the 'controller' user.
+
 - name: setup and test the system users role
   hosts: barc-system-users-test-nodes-local
-  remote_user: controller
+  remote_user: vagrant
   become: yes
   roles:
     - ../../../system-users
