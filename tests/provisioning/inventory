@@ -9,7 +9,8 @@
 localhost
 
 [vagrant-test]
-barc-system-users-test-bare.v.m
+barc-system-users-test-ubuntu-bare.v.m
+barc-system-users-test-centos-bare.v.m
 
 [vagrant:children]
 vagrant-test
@@ -18,8 +19,16 @@ vagrant-test
 vagrant
 
 
+[ubuntu]
+barc-system-users-test-ubuntu-bare.v.m
+
+[centos]
+barc-system-users-test-centos-bare.v.m
+
+
 [barc-system-users-test-nodes-local]
-barc-system-users-test-bare.v.m
+barc-system-users-test-ubuntu-bare.v.m
+barc-system-users-test-centos-bare.v.m
 
 [barc-apache-test-webservers:children]
 barc-system-users-test-nodes-local

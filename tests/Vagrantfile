@@ -8,9 +8,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Applies to all VMs
-    config.vm.box = "antarctica/trusty"
-
-    # SSH keys
+      # SSH keys
       # Vagrant will replace the default insecure private key with a new random key, this is more secure
       # but makes the use of provisioner's more difficult (as they don't know which key to use).
       # To fix this, the localhost user's public key is added to the vagrant user's authorized_keys file.
@@ -37,9 +35,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
 
   # VMs
-  config.vm.define hostname_project + "-" + hostname_environment + "-" + "bare" + "." + domain_name do |node|
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "bare" + "." + domain_name do |node|
 
-    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "bare" + "." + domain_name  # Define hostname
+    node.vm.box = "antarctica/trusty"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "bare" + "." + domain_name  # Define hostname
+  end
+
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "bare" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/centos7"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "bare" + "." + domain_name  # Define hostname
 
     # Provision using ansible
       # Due to bug[1] in Vagrant this block MUST be in the LAST VM specified in this Vagrantfile
@@ -54,15 +61,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             # Playbook specific configuration
               ansible.playbook = 'provisioning/prelude.yml'
           end
-
-        # Bootstrap - adds controller user with public keys
-        node.vm.provision "ansible" do |ansible|
-
-          # Standard configuration
-            ansible.limit = 'all'
-
-          # Playbook specific configuration
-            ansible.playbook = 'provisioning/bootstrap-vagrant.yml'
-        end
   end
 end

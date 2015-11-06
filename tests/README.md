@@ -29,6 +29,9 @@ These scenarios are tested:
 
 [1] This scenario is used for Continuous Integration.
 
+Scenarios are run on all Operating Systems this role supports. This does not apply to Continuous Integration, where 
+only Ubuntu Trusty (14.04) is supported and tested.
+
 ## Continuous Integration
 
 [SemaphoreCI](https://semaphoreci.com/) is used for Continuous Integration in this role. Pushing changes to this roles 
