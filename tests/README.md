@@ -25,12 +25,17 @@ Playbooks, host variables and other support files are kept in this `tests` direc
 
 This scenario is tested within *Continuous Integration*:
 
+* Two users are created, the first with optional settings, an authorised key and custom primary and secondary groups,
+the second, only with required options, no authorised keys and the default primary and no secondary groups
 
 These scenarios are tested *manually*:
 
 1. `test-users` - Creates two users, the first with optional settings, the second only with required options
 2. `test-users` - Creates two users, the first including an authorised key, the second without
 3. `test-remove` - Creates a new user, required options only, and removes a pre-existing user [1]
+4. `test-groups` - Creates two users, the first with custom primary and secondary groups, the second with a default
+primary group and no secondary groups [2]
+
 Note: VM names `test-*` may be repeated to test multiple scenarios on the same VM, providing they do not overlap.
 
 Manually run scenarios are run on all Operating Systems this role supports. Continuous Integration scenarios only run 
@@ -38,6 +43,10 @@ on Ubuntu Trusty (14.04).
 
 [1] Due to the way this scenario is implemented, idempotency is not checked.
 
+[2] It currently isn't possible to test if a user is added to multiple secondary groups as the output of the groups
+in both lists (i.e. the groups a user is in and list of groups the user should be in) are not predicable. This means
+it isn't possible to write a test condition to check if both lists are the same. However can check if the user is in at
+least one secondary group, which should hopefully be enough to verify the concept works.
 
 ## Continuous Integration
 

@@ -1,0 +1,8 @@
+---
+# Tasks for nodes in the 'barc-system-users-test-groups.yml' group
+
+- name: ensure groups user will be assigned to exist for test to work
+  group: name='{{ item }}' state=present
+  with_items:
+    - primary
+    - secondary

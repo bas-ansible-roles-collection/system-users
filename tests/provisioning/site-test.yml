@@ -14,6 +14,13 @@
   tasks:
     - include: group_tasks/barc-system-users-test-remove.yml
 
+- name: prepare nodes where a user is added to a series of pre-existing groups
+  hosts: barc-system-users-test-groups
+  remote_user: vagrant
+  become: yes
+  tasks:
+    - include: group_tasks/barc-system-users-test-groups.yml
+
 - name: setup and test the system users role
   hosts: barc-system-users-test-nodes
   remote_user: vagrant

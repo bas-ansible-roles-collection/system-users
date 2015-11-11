@@ -10,3 +10,5 @@
 - include: users.yml
 
 - include: authorized_keys.yml
+
+- include: groups.yml
