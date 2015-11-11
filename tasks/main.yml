@@ -2,3 +2,5 @@
 # Manages operating system users and associated configuration files and options
 
 - include: users.yml
+
+- include: authorized_keys.yml

@@ -8,3 +8,5 @@
 # Core configuration
 
 - include: users.yml
+
+- include: authorized_keys.yml
