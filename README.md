@@ -36,9 +36,11 @@ system_users_users:
     authorized_keys_files: []
 ```
 
-
 *This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
 to address this will be gratefully considered and given priority.*
+
+See [BARC-62](https://jira.ceh.ac.uk/browse/BARC-62) for further details.
+
 
 * Authorised keys must be expressed as individual public key files inside the same directory
 
@@ -50,27 +52,30 @@ in the form: `lookup('file', [authorized_keys_directory] + '/' + [authorized_key
 This means you cannot use the contents of a directory to dynamically control which public keys will be added as
 authorised keys. Instead you would also need to manage the `authorized_keys_files` list accordingly.
 
-
 *This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
 to address this will be gratefully considered and given priority.*
+
+See [BARC-61](https://jira.ceh.ac.uk/browse/BARC-61) for further details.
 
 * The authorized_keys file must be located at the conventional path `~/.ssh/authorized_keys`
 
 This conventional path is currently hard-coded (as `/home/[username]/.ssh/authorized_keys`) so that role tests can
 ensure the ownership and permissions of the `.ssh` directory and `.ssh/authorized_keys` file are properly set.
 
-
 *This limitation is **not** considered to be significantly limiting, and a solution will not be actively pursued. Pull 
 requests addressing this will be considered however.*
+
+See [BARC-63](https://jira.ceh.ac.uk/browse/BARC-63) for further details.
 
 * Authorised keys cannot be removed, only added
 
 It is not possible to indicate whether a public key should be added or removed from a users authorized_keys file. It is
 assumed keys will always be added.
 
-
 *This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
 to address this will be gratefully considered and given priority.*
+
+See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
 ## Usage
 
