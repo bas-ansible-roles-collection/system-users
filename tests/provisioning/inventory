@@ -9,8 +9,10 @@
 localhost
 
 [vagrant-test]
-barc-system-users-test-ubuntu-bare.v.m
-barc-system-users-test-centos-bare.v.m
+barc-system-users-test-ubuntu-users.v.m
+barc-system-users-test-centos-users.v.m
+barc-system-users-test-ubuntu-remove.v.m
+barc-system-users-test-centos-remove.v.m
 
 [vagrant:children]
 vagrant-test
@@ -20,15 +22,23 @@ vagrant
 
 
 [ubuntu]
-barc-system-users-test-ubuntu-bare.v.m
+barc-system-users-test-ubuntu-users.v.m
+barc-system-users-test-ubuntu-remove.v.m
 
 [centos]
-barc-system-users-test-centos-bare.v.m
+barc-system-users-test-centos-users.v.m
+barc-system-users-test-centos-remove.v.m
 
 
-[barc-system-users-test-nodes-local]
-barc-system-users-test-ubuntu-bare.v.m
-barc-system-users-test-centos-bare.v.m
+[barc-system-users-test-users]
+barc-system-users-test-ubuntu-users.v.m
+barc-system-users-test-centos-users.v.m
 
-[barc-apache-test-webservers:children]
-barc-system-users-test-nodes-local
+[barc-system-users-test-remove]
+barc-system-users-test-ubuntu-remove.v.m
+barc-system-users-test-centos-remove.v.m
+
+
+[barc-system-users-test-nodes:children]
+barc-system-users-test-users
+barc-system-users-test-remove

@@ -27,26 +27,44 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.hostmanager.enabled = true
       config.hostmanager.manage_host = true
       config.hostmanager.ignore_private_ip = false
-      config.hostmanager.include_offline = true
-
-    # Host configuration
-      config.trigger.before :up do
-        run "ansible-galaxy install https://github.com/antarctica/ansible-prelude,v0.1.2 --roles-path=provisioning/roles_bootstrap  --no-deps --force"
-      end
 
   # VMs
-  config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "bare" + "." + domain_name do |node|
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "users" + "." + domain_name do |node|
 
     node.vm.box = "antarctica/trusty"  # Define operating system
 
-    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "bare" + "." + domain_name  # Define hostname
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "users" + "." + domain_name  # Define hostname
   end
 
-  config.vm.define hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "bare" + "." + domain_name do |node|
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "users" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/trusty"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "users" + "." + domain_name  # Define hostname
+  end
+
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "remove" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/trusty"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "remove" + "." + domain_name  # Define hostname
+  end
+
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "remove" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/trusty"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "remove" + "." + domain_name  # Define hostname
+  end
+
 
     node.vm.box = "antarctica/centos7"  # Define operating system
 
     node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "bare" + "." + domain_name  # Define hostname
+    # Install prelude role for local machine setup
+    node.trigger.before :up do
+      run "ansible-galaxy install https://github.com/antarctica/ansible-prelude,v0.1.2 --roles-path=provisioning/roles_bootstrap  --no-deps --force"
+    end
 
     # Provision using ansible
       # Due to bug[1] in Vagrant this block MUST be in the LAST VM specified in this Vagrantfile

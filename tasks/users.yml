@@ -1,4 +1,11 @@
 ---
 # Manages operating system users
 
-# TODO: Create users command
+- name: manage system user
+  user:
+       name="{{ item.username }}"
+        uid="{{ item.uid     | default(omit) }}"
+    comment="{{ item.comment | default(omit) }}"
+      shell="{{ item.shell   | default(omit) }}"
+      state="{{ item.state   | default(omit) }}"
+  with_items: system_users_users

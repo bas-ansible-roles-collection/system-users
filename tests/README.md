@@ -23,14 +23,21 @@ A playbook is applied to a number of test VMs to run a number of different scena
 
 Playbooks, host variables and other support files are kept in this `tests` directory.
 
-These scenarios are tested:
+This scenario is tested within *Continuous Integration*:
 
-1. An server with a single user, with no additional properties or configuration changes [1]
 
-[1] This scenario is used for Continuous Integration.
+These scenarios are tested *manually*:
 
-Scenarios are run on all Operating Systems this role supports. This does not apply to Continuous Integration, where 
-only Ubuntu Trusty (14.04) is supported and tested.
+1. `test-users` - Creates two users, the first with optional settings, the second only with required options
+2. `test-users` - Creates two users, the first including an authorised key, the second without
+3. `test-remove` - Creates a new user, required options only, and removes a pre-existing user [1]
+Note: VM names `test-*` may be repeated to test multiple scenarios on the same VM, providing they do not overlap.
+
+Manually run scenarios are run on all Operating Systems this role supports. Continuous Integration scenarios only run 
+on Ubuntu Trusty (14.04).
+
+[1] Due to the way this scenario is implemented, idempotency is not checked.
+
 
 ## Continuous Integration
 

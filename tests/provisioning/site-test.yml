@@ -7,8 +7,15 @@
 
 # Note: This playbook does not use the conventional 'controller' user as this role creates the 'controller' user.
 
+- name: prepare nodes where a user is removed
+  hosts: barc-system-users-test-remove
+  remote_user: vagrant
+  become: yes
+  tasks:
+    - include: group_tasks/barc-system-users-test-remove.yml
+
 - name: setup and test the system users role
-  hosts: barc-system-users-test-nodes-local
+  hosts: barc-system-users-test-nodes
   remote_user: vagrant
   become: yes
   roles:

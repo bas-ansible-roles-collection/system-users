@@ -8,6 +8,18 @@
 - name: setup and test the system users role
   hosts: local
   become: yes
-  vars: []
+  vars:
+    system_users_users:
+      -
+        username: conwat
+        uid: 1001
+        comment: User account for Connie Watson
+        shell: /bin/bash
+        state: present
+      -
+        username: becda
+        state: present
   roles:
     - ~/system-users
+  tasks:
+    - include: ../tasks/main.yml
