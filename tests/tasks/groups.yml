@@ -25,7 +25,7 @@
 - name: assert secondary groups are correctly set for users where secondary groups are set
   assert:
     that:
-      - "'{{ item.0.secondary_groups | join(\'\') }}' in item.1.stdout"
+      - "'{{ item.0.secondary_groups | join() }}' in item.1.stdout"
   when: item.0.secondary_groups is defined
   with_together:
     - system_users_users

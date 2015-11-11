@@ -14,7 +14,7 @@
       - "item.1.stat.exists == true"
       - "item.1.stat.mode == '0700'"
       - "item.1.stat.pw_name == '{{ item.0.username }}'"
-      - "item.1.stat.gr_name == '{{ item.0.username }}'"
+      - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
   when: item.0.authorized_keys_directory is defined
   with_together:
     - system_users_users
@@ -33,7 +33,7 @@
       - "item.1.stat.exists == true"
       - "item.1.stat.mode == '0600'"
       - "item.1.stat.pw_name == '{{ item.0.username }}'"
-      - "item.1.stat.gr_name == '{{ item.0.username }}'"
+      - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
   when: item.0.authorized_keys_directory is defined
   with_together:
     - system_users_users
