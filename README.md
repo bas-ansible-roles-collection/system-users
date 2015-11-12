@@ -99,3 +99,14 @@ system_users_users:
     shell: "{{ system_users_defaults.shell }}"
     state: present
 ```
+
+### Tags
+
+BARC roles use standardised tags to control which aspects of an environment are changed by roles. Where relevant, tags
+will be applied at a role, or task(s) level, as indicated below.
+
+This role uses the following tags, for all tasks:
+
+* [**BARC_CONFIGURE**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE)
+* [**BARC_CONFIGURE_SYSTEM**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_SYSTEM)
+* [**BARC_CONFIGURE_USERS**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_USERS)
