@@ -1,10 +1,34 @@
 # System Users (`system-users`)
 
+Develop:
+[![Build Status](https://semaphoreci.com/api/v1/projects/7e62cbe6-b342-4927-953d-b9e421d59b67/593849/badge.svg)](https://semaphoreci.com/antarctica/ansible-system-users)
+
 Creates one or more operating system users with various optional attributes.
+
+**Part of the BAS Ansible Role Collection (BARC)**
+
+## Overview
+
+* Creates, or removes, one or more operating system users accounts
+* Optionally, sets a number of user account attributes such as UID, comment, shell, etc.
+* Optionally, adds more or more public key files to the `authorized_keys` file of a user account
+* Optionally, sets the primary group of a user account to an existing operating system group
+* Optionally, sets the secondary groups for a user account to one or more existing operating system groups
+
+## Quality Assurance
+
+This role uses manual and automated testing to ensure the features offered by this role work as advertised. 
+See `tests/README.md` for more information.
+
+## Dependencies
+
+* None
 
 ## Requirements
 
-* Public keys must already exist if using the authorized_keys feature
+* If adding public keys to a user account, these must already exist on your local machine
+* If setting the primary group or secondary groups for a user account, these must already exist as operating system
+groups
 
 ## Limitations
 
@@ -40,7 +64,6 @@ system_users_users:
 to address this will be gratefully considered and given priority.*
 
 See [BARC-62](https://jira.ceh.ac.uk/browse/BARC-62) for further details.
-
 
 * Authorised keys must be expressed as individual public key files inside the same directory
 
@@ -79,9 +102,36 @@ See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
 ## Usage
 
+### Typical playbook
+
+```yaml
+---
+
+- name: setup system users
+  hosts: all
+  become: yes
+  vars:
+    system_users_users:
+      -
+        username: conwat
+        comment: User account for Connie Watson
+        shell: /bin/bash
+        authorized_keys_directory: "../public_keys"
+        authorized_keys_files:
+          - "conwat_id_rsa.pub"
+        secondary_groups:
+          - adm
+        state: present
+  roles:
+    - system-users
+```
+
 ### Setting default options
 
-TODO: Describe (its not possible to chain the 'default' filter to try multiple values).
+It is not possible to set a 'default' user from which options are inherited [1], however it is possible to re-use 
+variables yourself.
+
+E.g.
 
 ```yaml
 ---
@@ -100,6 +150,9 @@ system_users_users:
     state: present
 ```
 
+[1] It is not possible to chain the `default()` and `omit` filters together, 
+e.g. `username: instance_username | default(default_username) | omit`.
+
 ### Tags
 
 BARC roles use standardised tags to control which aspects of an environment are changed by roles. Where relevant, tags
@@ -110,3 +163,126 @@ This role uses the following tags, for all tasks:
 * [**BARC_CONFIGURE**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE)
 * [**BARC_CONFIGURE_SYSTEM**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_SYSTEM)
 * [**BARC_CONFIGURE_USERS**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_USERS)
+
+### Variables
+
+#### `system_users_users`
+
+A list of operating system user accounts, and their properties, to be managed by this role.
+
+Structured as a list of items, with each item having the following properties:
+
+* *username*
+  * **MUST** be specified
+  * Values **MUST** be valid user usernames, as determined by the operating system
+  * Example: `conwat`
+* *uid*
+  * **MAY** be specified
+  * Specifies whether the user should have a fixed UID, or if should be allocated by the operating system
+  * Values **MUST** be valid user UIDs, as determined by the operating system
+  * Values **SHOULD** respect operating system conventions for system/non-system users and reserved or special ranges
+  * Where not specified, the operating system will assign a suitable UID (i.e. the next in the relevant range)
+  * Specifying this property is non-default behaviour
+  * Example: `1001`
+* *comment*
+  * **SHOULD** be specified
+  * Values **MUST** be valid user comments, as determined by the operating system
+  * Values **SHOULD** be suitably descriptive to aid other users, without being needlessly verbose
+  * Where not specified, no comment will be added
+  * Example: `User account for Connie Watson`
+* *shell*
+  * **MAY** be specified
+  * Specifies the shell interpreter for a user
+  * Values **MUST** be valid shell interpreters (i.e. installed), as determined by the operating system
+  * Where not specified, the default interpreter will be used
+  * Example: `/bin/bash`
+* *authorized_keys_directory*
+  * **MUST** be specified if the *authorized_keys_files* property contains one or more values, otherwise this **SHOULD 
+  NOT** be specified
+  * Specifies in which directory the public key files indicated by the *authorized_keys_files* property are located
+  * Values **MUST** represent a valid path to a directory, on the Ansible control machine (i.e. localhost), 
+  values **MUST** not use a trailing directory separator (i.e. `/`)
+  * Example `../public_keys` - assuming this role is within a `roles` directory, this would point to a `public_keys` 
+  directory that sits alongside the roles directory
+* *authorized_keys_files*
+  * **MUST** be specified as a property (see limitations above), however items **MAY** be specified 
+  * Specifies the individual public key files that should be added the user's `authorized_keys` file
+  * Structured as a list of items, with each item representing the file name of a public key file
+  * Item values **MUST** represent valid file names for valid SSH public key files, as determined by SSH, located within 
+  the directory set by the *authorized_keys_directory* property
+  * Where no public keys should be added for a user, this property can be set to an empty list (i.e. `[]`)
+  * Example: `- "conwat_id_rsa.pub"` - of a single item within this property
+* *primary_group*
+  * **MAY** be specified
+  * Specifies whether a pre-existing, named, group should be used for the user's primary group, or if a group named
+  after the user's username should be created and used
+  * Values **MUST** be the name for a valid group, that already exists, as determined by the operating system
+  * Where not specified, the operating system will create a group based on the user's username and use this as the
+  primary group
+  * Specifying this property is non-default behaviour, it is much more likely you will want to use secondary groups 
+  instead
+  * Example: `foo`
+* *secondary_groups*
+  * **MAY** be specified
+  * Specifies supplementary (secondary), pre-existing, named, groups the user should be member of
+  * Structured as a list of items, with each item representing a secondary group
+  * Item values **MUST** represent the name of valid group, that already exists, as determined by the operating system
+  * Where no secondary groups should be added for a user, this property can be omitted
+  * Example: `- adm` - of a single item within this property
+* *state*
+  * **SHOULD** be specified
+  * Specifies whether the user should be present as user, or absent
+  * Values **MUST** use one of these options, as determined by Ansible:
+    * `present`
+    * `absent`
+  * Where not specified it will be assumed the user should be present
+  * Example: `present`
+
+Default value: `[]` - an empty list
+
+## Developing
+
+### Issue tracking
+
+Issues, bugs, improvements, questions, suggestions and other tasks related to this package are managed through the 
+[BAS Ansible Role Collection](https://jira.ceh.ac.uk/projects/BARC) (BARC) project on Jira.
+
+This service is currently only available to BAS or NERC staff, although external collaborators can be added on request.
+See our contributing policy for more information.
+
+### Source code
+
+All changes should be committed, via pull request, to the canonical repository, which for this project is:
+
+`ssh://git@stash.ceh.ac.uk:7999/barc/system-users.git`
+
+A mirror of this repository is maintained on GitHub. Changes are automatically pushed from the canonical repository to
+this mirror, in a one-way process.
+
+`git@github.com:antarctica/ansible-system-users.git`
+
+Note: The canonical repository is only accessible within the NERC firewall. External collaborators, please make pull 
+requests against the mirrored GitHub repository and these will be merged as appropriate.
+
+### Contributing policy
+
+This project welcomes contributions, see `CONTRIBUTING.md` for our general policy.
+
+The [Git flow](https://github.com/antarctica/ansible-apache/blob/develop/sian.com/git/tutorials/comparing-workflows/gitflow-workflow) 
+workflow is used to manage the development of this project:
+
+* Discrete changes should be made within feature branches, created from and merged back into develop 
+(where small changes may be made directly)
+* When ready to release a set of features/changes, create a release branch from develop, update documentation as 
+required and merge into master with a tagged, semantic version (e.g. v1.2.3)
+* After each release, the master branch should be merged with develop to restart the process
+* High impact bugs can be addressed in hotfix branches, created from and merged into master (then develop) directly
+
+## Licence
+
+Copyright 2015 NERC BAS.
+
+Unless stated otherwise, all documentation is licensed under the Open Government License - version 3. All code is
+licensed under the MIT license.
+
+Copies of these licenses are included within this role.
