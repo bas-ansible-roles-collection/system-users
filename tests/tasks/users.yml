@@ -1,0 +1,52 @@
+---
+# Tests operating system users can be managed
+
+- name: list usernames of all system users
+  command: "cut -d : -f 1 /etc/passwd"
+  register: system_users_test_fact_system_users_usernames
+  changed_when: false
+- name: assert desired user exists
+  assert:
+    that:
+      - "'{{ item.username }}' in system_users_test_fact_system_users_usernames.stdout"
+  when: item.state == 'present'
+  with_items: system_users_users
+- name: assert undesired user does not exist
+  assert:
+    that:
+      - "'{{ item.username }}' not in system_users_test_fact_system_users_usernames.stdout"
+  when: item.state == 'absent'
+  with_items: system_users_users
+
+- name: list uids for all system users
+  command: "cut -d : -f 1,3 /etc/passwd"
+  register: system_users_test_fact_system_users_uids
+  changed_when: false
+- name: assert user has the correct uid where specified
+  assert:
+    that:
+      - "'{{ item.username }}:{{ item.uid }}' in system_users_test_fact_system_users_uids.stdout"
+  when: item.uid is defined
+  with_items: system_users_users
+
+- name: list comments for all system users
+  command: "cut -d : -f 1,5 /etc/passwd"
+  register: system_users_test_fact_system_users_comments
+  changed_when: false
+- name: assert user has the correct comment where specified
+  assert:
+    that:
+      - "'{{ item.username }}:{{ item.comment }}' in system_users_test_fact_system_users_comments.stdout"
+  when: item.comment is defined
+  with_items: system_users_users
+
+- name: list shells for all system users
+  command: "cut -d : -f 1,7 /etc/passwd"
+  register: system_users_test_fact_system_users_shells
+  changed_when: false
+- name: assert user has the correct shell where specified
+  assert:
+    that:
+      - "'{{ item.username }}:{{ item.shell }}' in system_users_test_fact_system_users_shells.stdout"
+  when: item.shell is defined
+  with_items: system_users_users

@@ -1,4 +1,8 @@
 ---
 # Manages operating system users and associated configuration files and options
 
-- include: users.yml
+- include: users.yml           tags=BARC_CONFIGURE,BARC_CONFIGURE_USERS,BARC_CONFIGURE_SYSTEM
+
+- include: authorized_keys.yml tags=BARC_CONFIGURE,BARC_CONFIGURE_USERS,BARC_CONFIGURE_SYSTEM
+
+- include: groups.yml          tags=BARC_CONFIGURE,BARC_CONFIGURE_USERS,BARC_CONFIGURE_SYSTEM

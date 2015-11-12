@@ -1,0 +1,5 @@
+---
+# Tasks for nodes in the 'barc-system-users-test-remove.yml' group
+
+- name: ensure user which should be removed during tests exists for test to work
+  user: name='becda' state='present'

@@ -1,0 +1,10 @@
+---
+# Manages groups operating system users belong to
+
+- name: manage system user groups
+  user:
+      name="{{ item.username }}"
+     group="{{ item.primary_group    | default(omit) }}"
+    groups="{{ item.secondary_groups | default([]) | join(',') or omit }}"
+     state="{{ item.state            | default(omit) }}"
+  with_items: system_users_users
