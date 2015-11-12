@@ -197,9 +197,11 @@ Structured as a list of items, with each item having the following properties:
   * Where not specified, the default interpreter will be used
   * Example: `/bin/bash`
 * *authorized_keys_directory*
-  * **MUST** be specified if the *authorized_keys_files* property contains one or more values, otherwise this **SHOULD 
-  NOT** be specified
+  * **MAY** be specified if it desired for authorised keys to a added to a user account, otherwise this **MUST NOT** be 
+  specified
   * Specifies in which directory the public key files indicated by the *authorized_keys_files* property are located
+  * The presence of this property is used to determine whether authorised keys should be managed for the user, i.e. if
+  this property is defined, the values in the *authorized_keys_files* property will be used
   * Values **MUST** represent a valid path to a directory, on the Ansible control machine (i.e. localhost), 
   values **MUST** not use a trailing directory separator (i.e. `/`)
   * Example `../public_keys` - assuming this role is within a `roles` directory, this would point to a `public_keys` 
