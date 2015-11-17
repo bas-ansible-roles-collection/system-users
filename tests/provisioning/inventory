@@ -19,9 +19,6 @@ barc-system-users-test-centos-groups.v.m
 [vagrant:children]
 vagrant-test
 
-[all-servers:children]
-vagrant
-
 
 [ubuntu]
 barc-system-users-test-ubuntu-users.v.m

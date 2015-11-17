@@ -5,6 +5,18 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][unreleased]
 
+### Fixed
+
+* Repository information in testing group vars
+
+### Changed
+
+* Improved comments for testing scripts
+
+### Removed
+
+* Redundant groups from testing inventory file
+
 ## 0.1.0 - 12/11/2015
 
 ### Added
