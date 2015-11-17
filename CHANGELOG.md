@@ -10,6 +10,7 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 * Repository information in testing group vars
 * README formatting and typos
 * Fixing role namespace in README, we are now 'BARC' not 'antarctica'
+* Correcting testing README
 
 ### Changed
 
