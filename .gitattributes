@@ -1,0 +1,6 @@
+# Remove files from releases using `git archive`
+.gitattributes export-ignore
+tests export-ignore
+
+# GitHub linguist specific customisations (to improve language statistics)
+tests/Vagrantfile linguist-vendored
