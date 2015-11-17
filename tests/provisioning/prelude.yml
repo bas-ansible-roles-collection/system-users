@@ -1,11 +1,8 @@
 ---
-# Setup host computer
+# Setup Ansible control computer (i.e. localhost)
 
-# known limitations
-# - You can only specify one public key to be copied into provisioning/public_keys and it will always be named "id_rsa.pub"
-
-- name: setup host
+- name: run control computer setup tasks
   hosts: localhost
   connection: local
   roles:
-    - ../roles_bootstrap/ansible-prelude
+    - BARC.prelude

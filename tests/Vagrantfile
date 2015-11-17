@@ -28,6 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.hostmanager.manage_host = true
       config.hostmanager.ignore_private_ip = false
 
+    # Fix "stdin: is not a tty" error
+      config.ssh.shell = "bash"
+
   # VMs
   config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "users" + "." + domain_name do |node|
 
@@ -70,23 +73,32 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "groups" + "." + domain_name  # Define hostname
 
-    # Install prelude role for local machine setup
-    node.trigger.before :up do
-      run "ansible-galaxy install https://github.com/antarctica/ansible-prelude,v0.1.2 --roles-path=provisioning/roles_bootstrap  --no-deps --force"
-    end
-
     # Provision using ansible
       # Due to bug[1] in Vagrant this block MUST be in the LAST VM specified in this Vagrantfile
       # [1] https://github.com/mitchellh/vagrant/issues/1784
 
-        # Prelude - perform project setup on local machine
+        # Prelude (bootstrap) - get role for performing project setup on local machine
           node.vm.provision "ansible" do |ansible|
-
             # Standard configuration
-              ansible.limit = 'all'
-
+              ansible.limit = "all"
             # Playbook specific configuration
-              ansible.playbook = 'provisioning/prelude.yml'
+              ansible.playbook = "provisioning/prelude-bootstrap.yml"
+          end
+
+        # Prelude - run role for performing project setup on local machine
+          node.vm.provision "ansible" do |ansible|
+            # Standard configuration
+              ansible.limit = "all"
+            # Playbook specific configuration
+              ansible.playbook = "provisioning/prelude.yml"
+          end
+
+        # Bootstrap - configure users within project VMs
+          node.vm.provision "ansible" do |ansible|
+            # Standard configuration
+              ansible.limit = "all"
+            # Playbook specific configuration
+              ansible.playbook = "provisioning/vagrant-bootstrap.yml"
           end
   end
 end

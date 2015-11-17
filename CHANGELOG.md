@@ -15,6 +15,7 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ### Changed
 
 * Improved comments for testing scripts
+* Updating testing provisioning to new conventions
 
 ### Removed
 
