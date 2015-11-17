@@ -126,7 +126,7 @@ See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
           - adm
         state: present
   roles:
-    - system-users
+    - BARC.system-users
 ```
 
 ### Setting default options
@@ -169,7 +169,7 @@ This role uses the following tags, for all tasks:
 
 ### Variables
 
-#### `system_users_users`
+#### *system_users_users*
 
 A list of operating system user accounts, and their properties, to be managed by this role.
 
@@ -243,7 +243,7 @@ Structured as a list of items, with each item having the following properties:
   * Where not specified it will be assumed the user should be present
   * Example: `present`
 
-Default value: `[]` - an empty list
+Default: `[]` - an empty list
 
 ## Developing
 
@@ -273,7 +273,7 @@ requests against the mirrored GitHub repository and these will be merged as appr
 
 This project welcomes contributions, see `CONTRIBUTING.md` for our general policy.
 
-The [Git flow](https://github.com/antarctica/ansible-apache/blob/develop/sian.com/git/tutorials/comparing-workflows/gitflow-workflow) 
+The [Git flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow/) 
 workflow is used to manage the development of this project:
 
 * Discrete changes should be made within feature branches, created from and merged back into develop 
