@@ -105,6 +105,20 @@ See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
 ## Usage
 
+### Public keys or passwords
+
+This role supports two methods of authenticating as a user:
+
+1. Public keys, uses a public/private key-pair to authenticate, authorised public keys are managed by this role
+2. Passwords, uses a string to authenticate, user passwords are managed by the operating system
+
+It is strongly **RECOMMENDED** to the first, public keys, option wherever feasible and is generally considered best 
+practice
+[source](http://security.stackexchange.com/questions/3887/is-using-a-public-key-for-logging-in-to-ssh-any-better-than-saving-a-password).
+
+This role does support setting user passwords where there is no other option, however long term support by this role is
+not guaranteed and will be removed if possible in future.
+
 ### Typical playbook
 
 ```yaml
@@ -217,6 +231,14 @@ Structured as a list of items, with each item having the following properties:
   the directory set by the *authorized_keys_directory* property
   * Where no public keys should be added for a user, this property can be set to an empty list (i.e. `[]`)
   * Example: `- "conwat_id_rsa.pub"` - of a single item within this property
+* *password*
+  * **MAY** be specified
+  * Specifies the login password for the user, the value will be hashed by this role
+  * It is **NOT RECOMMENDED** to use this option, see the notes in the usage section of this role for more information
+  * Values **MUST** be valid for use as system passwords, as determined by the operating system
+  * Values **MUST** be given in plain text, care **SHOULD** be taken to suitably protect such values from disclosure 
+  (i.e. by using encryption)
+  * Where not specified, no password will be set, this is **RECOMMENDED**
 * *primary_group*
   * **MAY** be specified
   * Specifies whether a pre-existing, named, group should be used for the user's primary group, or if a group named
