@@ -8,6 +8,8 @@
 # Note: The 'authorized_keys_files_contents' option is not supported by the system users role, it used exclusively for
 # testing.
 
+# Note: The value for the 'password' option is stored in clear text. This is acceptable for testing, but nowhere else!
+
 - name: setup and test the system users role
   hosts: local
   become: yes
@@ -22,6 +24,7 @@
         authorized_keys_files:
           - "conwat_id_rsa.pub"
         authorized_keys_files_contents: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCepXd+cYp7ey4gRMDvSJqFZiBKUhGV8FtfFe08gW7IwGbBwCmMvCNx3gqDIKikWMb6ZfwDAPlz4F0r7kMYNt/oCGkwQNGhgEFVdPvHOBIIIt6JQH4SqKjqDtYw9EIUVdvEGbiClcOoOk7avKsUpZmorbusIwPmwfdgnXcxKWC6+tU2ckIvqOr20VRLn012lyJQYpN22lejmsoZJVde9qvEdNY1qUI1Tj07cxEcHA25h4/i9PpBd4vVADrwQoIrBkUuMBvd4xERGhFFxl7VE2dJyjaTG8qvuh4hPc5Sld39VwfQSleRSJ6NC4nmugtDP5lYXireENXx5f5Fgj1jzcBZ conwat@bas.ac.uk"
+        password: password
         primary_group: primary
         secondary_groups:
           - secondary
