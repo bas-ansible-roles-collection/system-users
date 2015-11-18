@@ -7,6 +7,7 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Added
 
+* An option to set the password for a user - tests do not verify the correct password value was used, this is assumed
 * Experimenting with Git attributes file to produce cleaner release archives and improve language stats on GitHub
 
 ### Fixed
