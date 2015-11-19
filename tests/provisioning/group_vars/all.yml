@@ -3,7 +3,7 @@
 
 # Generic
 project_hostname_project: "barc-system-users"
-project_repository: "git@github.com:antarctica/barc-system-users.git"
+project_repository: "git@github.com:antarctica/ansible-system-users.git"
 
 # BARC roles
 barc_role_name: system-users

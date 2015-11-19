@@ -1,3 +1,7 @@
 *
 
+!*/
 !.gitignore
+!README.md
+!BARC.prelude/meta/main.yml
+BARC.prelude/README.md

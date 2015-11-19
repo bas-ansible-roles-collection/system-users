@@ -1,0 +1,17 @@
+---
+# Setup Ansible control computer (i.e. localhost)
+
+# This playbook is needed as Ansible won't reload roles between plays.
+# By default the 'BARC.prelude' role will be a place-holder which is then replaced by the real role using this play.
+# To use this updated, real, role, a new playbook needs to be called, a separate play is not enough.
+
+- name: get prelude role to setup host
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: ensure 'roles' directory exists
+      file: path=roles state=directory
+    - name: get prelude role using ansible-galaxy
+      command: "ansible-galaxy install BARC.prelude,v1.0.1 --force"
+      args:
+        chdir: ../

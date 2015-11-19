@@ -5,6 +5,29 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][unreleased]
 
+## 0.2.0 - 19/11/2015
+
+### Added
+
+* An option to set the password for a user - tests do not verify the correct password value was used, this is assumed
+* Experimenting with Git attributes file to produce cleaner release archives and improve language stats on GitHub
+
+### Fixed
+
+* Repository information in testing group vars
+* README formatting and typos
+* Fixing role namespace in README, we are now 'BARC' not 'antarctica'
+* Correcting testing README
+
+### Changed
+
+* Improved comments for testing scripts
+* Updating testing provisioning to new conventions
+
+### Removed
+
+* Redundant groups from testing inventory file
+
 ## 0.1.0 - 12/11/2015
 
 ### Added

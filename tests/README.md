@@ -23,12 +23,12 @@ A playbook is applied to a number of test VMs to run a number of different scena
 
 Playbooks, host variables and other support files are kept in this `tests` directory.
 
-This scenario is tested within *Continuous Integration*:
+A single scenario is tested using *Continuous Integration*:
 
 * Two users are created, the first with optional settings, an authorised key and custom primary and secondary groups,
 the second, only with required options, no authorised keys and the default primary and no secondary groups
 
-These scenarios are tested *manually*:
+Multiple scenarios are tested *manually*:
 
 1. `test-users` - Creates two users, the first with optional settings, the second only with required options
 2. `test-users` - Creates two users, the first including an authorised key, the second without
@@ -36,7 +36,7 @@ These scenarios are tested *manually*:
 4. `test-groups` - Creates two users, the first with custom primary and secondary groups, the second with a default
 primary group and no secondary groups [2]
 
-Note: VM names `test-*` may be repeated to test multiple scenarios on the same VM, providing they do not overlap.
+Note: Multiple scenarios may be run within the same VM, providing they do not overlap.
 
 Manually run scenarios are run on all Operating Systems this role supports. Continuous Integration scenarios only run 
 on Ubuntu Trusty (14.04).
@@ -95,7 +95,9 @@ pip install ansible
 For *Thread #1* rename to *Build and Test* with these commands:
 
 ```shell
+ansible-playbook provisioning/test-ci.yml --syntax-check
 ansible-playbook provisioning/test-ci.yml --connection=local
+ansible-playbook provisioning/test-ci.yml --connection=local | tee /tmp/output.txt; grep -q 'changed=0.*failed=0' /tmp/output.txt && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
 ```
 
 Set the *Branches* settings to:
@@ -122,17 +124,16 @@ effort/complexity as far as is practical.
 #### All environments
 
 * Mac OS X or Linux
-* [Git](http://git-scm.com/) `brew install git` [1] [2]
-* [Vagrant](http://vagrantup.com) `brew cask install vagrant` [3] [2]
+* [VMware Fusion](http://vmware.com/fusion) `brew cask install vmware-fusion` [1] [2]
+* [Vagrant](http://vagrantup.com) `brew cask install vagrant` [1] [2]
 * Vagrant plugins:
     * [Vagrant VMware](http://www.vagrantup.com/vmware) `vagrant plugin install vagrant-vmware-fusion`
     * [Host manager](https://github.com/smdahlen/vagrant-hostmanager) `vagrant plugin install vagrant-hostmanager`
-    * [Vagrant triggers](https://github.com/emyl/vagrant-triggers) `vagrant plugin install vagrant-triggers`
-* [NMap](http://nmap.org/) `brew cask install nmap` [3] [2] [4]
-* [Ansible](http://www.ansible.com) `brew install ansible` [1] [2]
+* [Git](http://git-scm.com/) `brew install git` [3] [2]
+* [Ansible](http://www.ansible.com) `brew install ansible` [3] [2]
 * You have a [private key](https://help.github.com/articles/generating-ssh-keys/) `id_rsa`
 and [public key](https://help.github.com/articles/generating-ssh-keys/) `id_rsa.pub` in `~/.ssh/`
-* You have an entry like [5] in your `~/.ssh/config`
+* You have an entry like [4] in your `~/.ssh/config`
 
 [1] `brew` is a package manager for Mac OS X, see [here](http://brew.sh/) for details.
 
@@ -141,56 +142,10 @@ binaries/packages can be installed manually if you wish.
 
 [3] `brew cask` is a package manager for Mac OS X binaries, see [here](http://caskroom.io/) for details.
 
-[4] `nmap` is needed to determine if you access internal resources (such as Stash).
-
-[5] SSH config entry
+[4] SSH config entry
 
 ```shell
 Host *.v.m
-    ForwardAgent yes
-    User app
-    IdentityFile ~/.ssh/id_rsa
-    Port 22
-```
-
-#### Manual testing - local
-
-* [VMware Fusion](http://vmware.com/fusion) `brew cask install vmware-fusion`
-* [Vagrant](http://vagrantup.com) `brew cask install vagrant`
-* Vagrant plugins:
-    * [Vagrant VMware](http://www.vagrantup.com/vmware) `vagrant plugin install vagrant-vmware-fusion`
-    * [Host manager](https://github.com/smdahlen/vagrant-hostmanager) `vagrant plugin install vagrant-hostmanager`
-    * [Vagrant triggers](https://github.com/emyl/vagrant-triggers) `vagrant plugin install vagrant-triggers`
-* You have an entry like [1] in your `~/.ssh/config`
-* You have a [self signed SSL certificate for local use](https://gist.github.com/felnne/25c220a03f8f39663a5d), with the
-certificate assumed at, `tests/provisioning/certificates/v.m/v.m.tls.crt`, and private key at `tests/provisioning/certificates/v.m/v.m.tls.key`
-
-[1] SSH config entry
-
-```shell
-Host *.v.m
-    ForwardAgent yes
-    User app
-    IdentityFile ~/.ssh/id_rsa
-    Port 22
-```
-
-#### Manual testing - remote
-
-* [Terraform](terraform.io) `brew cask install terraform` (minimum version: 6.0)
-* [Rsync](https://rsync.samba.org/) `brew install rsync`
-* You have an entry like [1] in your `~/.ssh/config`
-* An environment variable: `TF_VAR_digital_ocean_token=XXX` set,
-where `XXX` is your DigitalOcean personal access token - used by Terraform
-* An environment variable: `TF_VAR_ssh_fingerprint=XXX` set,
- where `XXX` is [your public key fingerprint](https://gist.github.com/felnne/596d2bf11842a0cf64d6) - used by Terraform
-* You have the `*.web.nerc-bas.ac.uk` wildcard SSL certificate, with the
-certificate assumed at, `tests/provisioning/certificates/star.web.nerc-bas.ac.uk/star.web.nerc-bas.ac.uk-certificate-including-trust-chain.crt`, and private key at `tests/provisioning/certificates/star.web.nerc-bas.ac.uk/star.web.nerc-bas.ac.uk.key`
-
-[1] SSH config entry
-
-```shell
-Host *.web.nerc-bas.ac.uk
     ForwardAgent yes
     User app
     IdentityFile ~/.ssh/id_rsa
@@ -213,9 +168,14 @@ $ vagrant up
 
 Vagrant will automatically configure the localhost hosts file for infrastructure it creates on your behalf:
 
-| Name                        | Points To         | FQDN                        | Notes                       |
-| --------------------------- | ----------------- | --------------------------- | --------------------------- |
-| barc-system-users-test-bare | *computed value*  | `barc-apache-test-bare.v.m` | The VM's private IP address |
+| Name                                 | Points To         | FQDN                                       | Notes                       |
+| ------------------------------------ | ----------------- | ------------------------------------------ | --------------------------- |
+| barc-system-users-test-ubuntu-users  | *computed value*  | `barc-system-users-test-ubuntu-users.v.m`  | The VM's private IP address |
+| barc-system-users-test-centos-users  | *computed value*  | `barc-system-users-test-centos-users.v.m`  | The VM's private IP address |
+| barc-system-users-test-ubuntu-remove | *computed value*  | `barc-system-users-test-ubuntu-remove.v.m` | The VM's private IP address |
+| barc-system-users-test-centos-remove | *computed value*  | `barc-system-users-test-centos-remove.v.m` | The VM's private IP address |
+| barc-system-users-test-ubuntu-groups | *computed value*  | `barc-system-users-test-ubuntu-groups.v.m` | The VM's private IP address |
+| barc-system-users-test-centos-groups | *computed value*  | `barc-system-users-test-centos-groups.v.m` | The VM's private IP address |
 
 Note: Vagrant managed VMs also have a second, host-guest only, network for management purposes not documented here.
 
@@ -237,6 +197,7 @@ $ ansible-playbook provisioning/site-test.yml --syntax-check
 $ ansible-playbook provisioning/site-test.yml
 
 # Apply again to check idempotency:
+# Note: The 'remove user' scenario is permitted to fail this check
 $ ansible-playbook provisioning/site-test.yml
 ```
 

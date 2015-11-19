@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  description: Setup a control computer ready for using a project
+  author: Felix Fennell
+  company: British Antarctic Survey
+  license: MIT
+  min_ansible_version: 1.8
+  categories:
+  - packaging
+  - system
+
+dependencies: []

@@ -8,6 +8,8 @@
 # Note: The 'authorized_keys_files_contents' option is not supported by the system users role, it used exclusively for
 # testing.
 
+# Note: The value for the 'password' option is stored in clear text. This is acceptable for testing, but nowhere else!
+
 - name: setup and test the system users role
   hosts: local
   become: yes
