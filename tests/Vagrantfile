@@ -13,8 +13,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # but makes the use of provisioner's more difficult (as they don't know which key to use).
       # To fix this, the localhost user's public key is added to the vagrant user's authorized_keys file.
       # Provisioning tools will need to configured to use the localhost user's private key when authenticating.
-      config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "id_rsa.pub"
-      config.vm.provision "shell", inline: 'cat /home/vagrant/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys && rm /home/vagrant/id_rsa.pub'
+      config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+        s.inline = <<-SHELL
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+      end
 
     # Shared folders
       # /vagrant is not used to ensure consistency across environments [development/staging/production]
