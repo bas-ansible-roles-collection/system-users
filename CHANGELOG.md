@@ -5,6 +5,10 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+* Name of CI playbook to fit with new conventions
+
 ## 0.2.0 - 19/11/2015
 
 ### Added
