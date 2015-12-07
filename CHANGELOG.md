@@ -5,6 +5,10 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased][unreleased]
 
+### Fixed
+
+* Added missing instructions for setting up CI for the master branch
+
 ### Changed
 
 * Name of CI playbook to fit with new conventions

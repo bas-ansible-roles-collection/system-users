@@ -74,10 +74,10 @@ organisation [1]
 ### Setup
 
 If not added already, create a new project in [SemaphoreCI](https://semaphoreci.com) using the `develop` branch of the
-Project Repository and associate within the *antarctica* organisation.
+Project Repository and associate within the *antarctica* organisation. Repeat this for the *master* branch when ready.
 
 If the project already exists, but not this branch, check the settings below are correct and add the *develop* branch
-as a new build branch manually.
+as a new build branch manually. Repeat this for the *master* branch when ready.
 
 In the settings for this project set the *Build Settings* to:
 
@@ -104,14 +104,14 @@ Set the *Branches* settings to:
 
 * Build new branches: `Never`
 
-Copy the build badge for the *develop* branch to this README.
+Copy the build badge for the *develop* and *master* (when ready) branch to this README.
 
 If the project and branch already exists, check the settings above are correct.
 
 ### Usage
 
-Pushing to the `develop` branch will automatically trigger SemaphoreCI, test results are available 
-[here](https://semaphoreci.com/antarctica/ansible-apache).
+Pushing to the `develop` or *master* (when ready) branch will automatically trigger SemaphoreCI, test results are 
+available [here](https://semaphoreci.com/antarctica/ansible-system-users).
 
 ## Manual tests
 
