@@ -40,8 +40,7 @@ feature is used for that user
 
 This occurs because of the 
 [sub-elements loop](http://docs.ansible.com/ansible/playbooks_loops.html#looping-over-subelements) used for managing
-authorised keys. An [issue](https://github.com/ansible/ansible/issues/9827) is open for this exact problem, but is 
-unlikely to be fixed until Ansible 2.0.
+authorised keys. An issue is open for this exact problem, but is unlikely to be fixed until Ansible 2.0.
 
 Where you are not managing the authorised keys for a user with this role, this variable can be safely set to an empty
 list. This role will only apply changes to a users authorised keys file where the `authorized_keys_directory` is 
@@ -63,8 +62,10 @@ system_users_users:
     authorized_keys_files: []
 ```
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
+
+See [#9827](https://github.com/ansible/ansible/issues/9827) for further information of this upstream bug.
 
 See [BARC-62](https://jira.ceh.ac.uk/browse/BARC-62) for further details.
 
@@ -78,8 +79,8 @@ in the form: `lookup('file', [authorized_keys_directory] + '/' + [authorized_key
 This means you cannot use the contents of a directory to dynamically control which public keys will be added as
 authorised keys. Instead you would also need to manage the `authorized_keys_files` list accordingly.
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
 
 See [BARC-61](https://jira.ceh.ac.uk/browse/BARC-61) for further details.
 
@@ -88,8 +89,8 @@ See [BARC-61](https://jira.ceh.ac.uk/browse/BARC-61) for further details.
 This conventional path is currently hard-coded (as `/home/[username]/.ssh/authorized_keys`) so that role tests can
 ensure the ownership and permissions of the `.ssh` directory and `.ssh/authorized_keys` file are properly set.
 
-*This limitation is **not** considered to be significantly limiting, and a solution will not be actively pursued. Pull 
-requests addressing this will be considered however.*
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
 
 See [BARC-63](https://jira.ceh.ac.uk/browse/BARC-63) for further details.
 
@@ -98,8 +99,8 @@ See [BARC-63](https://jira.ceh.ac.uk/browse/BARC-63) for further details.
 It is not possible to indicate whether a public key should be added or removed from a users authorized_keys file. It is
 assumed keys will always be added.
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
 
 See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
@@ -113,8 +114,7 @@ This role supports two methods of authenticating as a user:
 2. Passwords, uses a string to authenticate, user passwords are managed by the operating system
 
 It is strongly **RECOMMENDED** to the first, public keys, option wherever feasible and is generally considered best 
-practice
-[source](http://security.stackexchange.com/questions/3887/is-using-a-public-key-for-logging-in-to-ssh-any-better-than-saving-a-password).
+practice [source](http://security.stackexchange.com/questions/3887/is-using-a-public-key-for-logging-in-to-ssh-any-better-than-saving-a-password).
 
 This role does support setting user passwords where there is no other option, however long term support by this role is
 not guaranteed and will be removed if possible in future.
@@ -124,7 +124,7 @@ not guaranteed and will be removed if possible in future.
 ```yaml
 ---
 
-- name: setup system users
+- name: configure system users
   hosts: all
   become: yes
   vars:
@@ -186,6 +186,8 @@ This role uses the following tags, for all tasks:
 #### *system_users_users*
 
 A list of operating system user accounts, and their properties, to be managed by this role.
+
+* **MAY** be specified
 
 Structured as a list of items, with each item having the following properties:
 

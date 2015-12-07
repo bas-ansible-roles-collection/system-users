@@ -8,6 +8,8 @@ This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 * Added missing instructions for setting up CI for the master branch
+* README formatting and typos
+* Minor corrections to other files for formatting and typos
 
 ### Changed
 
