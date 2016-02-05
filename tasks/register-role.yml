@@ -9,4 +9,4 @@
 - name: generate local fact file to register role
   template:
      src=etc/ansible/facts.d/barc_role_template.fact.j2
-    dest="/etc/ansible/facts.d/barc_{{ BARC_role_name }}.fact"
+    dest="/etc/ansible/facts.d/barc_{{ system_users_barc_role_name }}.fact"
