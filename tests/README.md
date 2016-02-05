@@ -87,9 +87,8 @@ In the settings for this project set the *Build Settings* to:
 For the *Setup* thread enter these commands:
 
 ```shell
-mv ~/ansible-system-users ~/system-users
 cd tests
-pip install ansible
+pip install ansible==1.9.4
 ```
 
 For *Thread #1* rename to *Build and Test* with these commands:

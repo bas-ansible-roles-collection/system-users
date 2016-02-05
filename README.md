@@ -154,7 +154,7 @@ not guaranteed and will be removed if possible in future.
           - adm
         state: present
   roles:
-    - BARC.system-users
+    - bas-ansible-roles-collection.system-users
 ```
 
 ### Setting default options
@@ -317,7 +317,7 @@ All changes should be committed, via pull request, to the canonical repository, 
 A mirror of this repository is maintained on GitHub. Changes are automatically pushed from the canonical repository to
 this mirror, in a one-way process.
 
-`git@github.com:antarctica/ansible-system-users.git`
+`git@github.com:bas-ansible-roles-collection/system-users.git`
 
 Note: The canonical repository is only accessible within the NERC firewall. External collaborators, please make pull 
 requests against the mirrored GitHub repository and these will be merged as appropriate.
