@@ -1,10 +1,10 @@
 # System Users (`system-users`)
 
 Master:
-[![Build Status](https://semaphoreci.com/api/v1/projects/7e62cbe6-b342-4927-953d-b9e421d59b67/600994/badge.svg)](https://semaphoreci.com/antarctica/ansible-system-users)
+[![Build Status](https://semaphoreci.com/api/v1/bas-ansible-roles-collection/system-users/branches/master/badge.svg)](https://semaphoreci.com/bas-ansible-roles-collection/system-users)
 
 Develop:
-[![Build Status](https://semaphoreci.com/api/v1/projects/7e62cbe6-b342-4927-953d-b9e421d59b67/593849/badge.svg)](https://semaphoreci.com/antarctica/ansible-system-users)
+[![Build Status](https://semaphoreci.com/api/v1/bas-ansible-roles-collection/system-users/branches/develop/badge.svg)](https://semaphoreci.com/bas-ansible-roles-collection/system-users)
 
 Creates one or more operating system users with various optional attributes.
 
