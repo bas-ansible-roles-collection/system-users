@@ -24,3 +24,7 @@
     - BARC_CONFIGURE
     - BARC_CONFIGURE_USERS
     - BARC_CONFIGURE_SYSTEM
+
+- include: register-role.yml
+  tags:
+    - BARC_ROLE_REGISTRATION

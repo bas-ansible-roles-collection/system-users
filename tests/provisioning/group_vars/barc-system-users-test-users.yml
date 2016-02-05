@@ -6,10 +6,9 @@
 
 # Note: The value for the 'password' option is stored in clear text. This is acceptable for testing, but nowhere else!
 
-# Generic (for system users)
+# system-users specific variables
 generic_system_users_authorized_keys_directory: ../tests/provisioning/data/public_keys
 
-# System Users
 system_users_users:
   -
     username: conwat

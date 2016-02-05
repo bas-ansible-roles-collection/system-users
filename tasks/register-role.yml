@@ -1,0 +1,12 @@
+---
+# Create an Ansible local fact to record this role has been applied
+
+- name: ensure ansible local facts directory exists
+  file:
+     path=/etc/ansible/facts.d
+    state=directory
+
+- name: generate local fact file to register role
+  template:
+     src=etc/ansible/facts.d/barc_role_template.fact.j2
+    dest="/etc/ansible/facts.d/barc_{{ BARC_role_name }}.fact"

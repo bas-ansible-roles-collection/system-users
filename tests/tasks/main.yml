@@ -12,3 +12,6 @@
 - include: authorized_keys.yml
 
 - include: groups.yml
+
+- include: register-role.yml
+
