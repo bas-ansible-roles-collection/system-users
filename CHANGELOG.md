@@ -7,7 +7,15 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ## [Unreleased][unreleased]
 
-## 0.3.0 - 5/02/2016
+## 0.3.1 - 05/02/2016
+
+### Fixed
+
+* Change log date formatting
+* BARC role version variable
+* Semaphore organisation URLs
+
+## 0.3.0 - 05/02/2016
 
 ### Added
 
