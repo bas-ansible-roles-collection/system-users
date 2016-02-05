@@ -13,7 +13,7 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ### Fixed
 
-* Added missing instructions for setting up CI for the master branch
+* Missing instructions for setting up CI for the master branch
 * README formatting and typos
 * Minor corrections to other files for formatting and typos
 * Pinning Ansible to pre-2.0 version in CI
