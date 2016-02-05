@@ -17,6 +17,7 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 * README formatting and typos
 * Minor corrections to other files for formatting and typos
 * Pinning Ansible to pre-2.0 version in CI
+* Missing testing information for lack of functional tests
 
 ### Changed
 

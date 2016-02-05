@@ -15,3 +15,8 @@
 
 - include: register-role.yml
 
+# Functionality checks
+# These checks need to run after the package or service has been configured to ensure it is working correctly,
+# using an configuration that may have been set by this role.
+
+# There are no functionality checks for this role
