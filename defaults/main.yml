@@ -3,7 +3,7 @@
 
 # BARC specific variables
 system_users_barc_role_name: system-users
-system_users_barc_role_version: 0.3.1
+system_users_barc_role_version: 0.3.2
 
 # system-users specific variables
 system_users_users: []
