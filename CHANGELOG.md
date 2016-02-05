@@ -7,6 +7,8 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ## [Unreleased][unreleased]
 
+## 0.3.0 - 5/02/2016
+
 ### Added
 
 * Local facts to record this role has been applied to a system and its version, plus supporting documentation sections
