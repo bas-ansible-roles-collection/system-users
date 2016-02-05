@@ -4,7 +4,7 @@
 # Note: The 'authorized_keys_files_contents' option is not supported by the system users role, it used exclusively for
 # testing.
 
-# System Users
+# system-users specific variables
 system_users_users:
   -
     username: conwat

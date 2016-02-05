@@ -74,10 +74,10 @@ organisation [1]
 ### Setup
 
 If not added already, create a new project in [SemaphoreCI](https://semaphoreci.com) using the `develop` branch of the
-Project Repository and associate within the *antarctica* organisation.
+Project Repository and associate within the *antarctica* organisation. Repeat this for the *master* branch when ready.
 
 If the project already exists, but not this branch, check the settings below are correct and add the *develop* branch
-as a new build branch manually.
+as a new build branch manually. Repeat this for the *master* branch when ready.
 
 In the settings for this project set the *Build Settings* to:
 
@@ -87,31 +87,30 @@ In the settings for this project set the *Build Settings* to:
 For the *Setup* thread enter these commands:
 
 ```shell
-mv ~/ansible-system-users ~/system-users
 cd tests
-pip install ansible
+pip install ansible==1.9.4
 ```
 
 For *Thread #1* rename to *Build and Test* with these commands:
 
 ```shell
-ansible-playbook provisioning/test-ci.yml --syntax-check
-ansible-playbook provisioning/test-ci.yml --connection=local
-ansible-playbook provisioning/test-ci.yml --connection=local | tee /tmp/output.txt; grep -q 'changed=0.*failed=0' /tmp/output.txt && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+ansible-playbook provisioning/site-ci.yml --syntax-check
+ansible-playbook provisioning/site-ci.yml --connection=local
+ansible-playbook provisioning/site-ci.yml --connection=local | tee /tmp/output.txt; grep -q 'changed=0.*failed=0' /tmp/output.txt && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
 ```
 
 Set the *Branches* settings to:
 
 * Build new branches: `Never`
 
-Copy the build badge for the *develop* branch to this README.
+Copy the build badge for the *develop* and *master* (when ready) branch to this README.
 
 If the project and branch already exists, check the settings above are correct.
 
 ### Usage
 
-Pushing to the `develop` branch will automatically trigger SemaphoreCI, test results are available 
-[here](https://semaphoreci.com/antarctica/ansible-apache).
+Pushing to the `develop` or *master* (when ready) branch will automatically trigger SemaphoreCI, test results are 
+available [here](https://semaphoreci.com/antarctica/ansible-system-users).
 
 ## Manual tests
 

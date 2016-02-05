@@ -1,10 +1,10 @@
 # System Users (`system-users`)
 
 Master:
-[![Build Status](https://semaphoreci.com/api/v1/projects/7e62cbe6-b342-4927-953d-b9e421d59b67/600994/badge.svg)](https://semaphoreci.com/antarctica/ansible-system-users)
+[![Build Status](https://semaphoreci.com/api/v1/bas-ansible-roles-collection/system-users/branches/master/badge.svg)](https://semaphoreci.com/bas-ansible-roles-collection/system-users)
 
 Develop:
-[![Build Status](https://semaphoreci.com/api/v1/projects/7e62cbe6-b342-4927-953d-b9e421d59b67/593849/badge.svg)](https://semaphoreci.com/antarctica/ansible-system-users)
+[![Build Status](https://semaphoreci.com/api/v1/bas-ansible-roles-collection/system-users/branches/develop/badge.svg)](https://semaphoreci.com/bas-ansible-roles-collection/system-users)
 
 Creates one or more operating system users with various optional attributes.
 
@@ -40,8 +40,7 @@ feature is used for that user
 
 This occurs because of the 
 [sub-elements loop](http://docs.ansible.com/ansible/playbooks_loops.html#looping-over-subelements) used for managing
-authorised keys. An [issue](https://github.com/ansible/ansible/issues/9827) is open for this exact problem, but is 
-unlikely to be fixed until Ansible 2.0.
+authorised keys. An issue is open for this exact problem, but is unlikely to be fixed until Ansible 2.0.
 
 Where you are not managing the authorised keys for a user with this role, this variable can be safely set to an empty
 list. This role will only apply changes to a users authorised keys file where the `authorized_keys_directory` is 
@@ -63,8 +62,10 @@ system_users_users:
     authorized_keys_files: []
 ```
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
+
+See [#9827](https://github.com/ansible/ansible/issues/9827) for further information of this upstream bug.
 
 See [BARC-62](https://jira.ceh.ac.uk/browse/BARC-62) for further details.
 
@@ -78,8 +79,8 @@ in the form: `lookup('file', [authorized_keys_directory] + '/' + [authorized_key
 This means you cannot use the contents of a directory to dynamically control which public keys will be added as
 authorised keys. Instead you would also need to manage the `authorized_keys_files` list accordingly.
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
 
 See [BARC-61](https://jira.ceh.ac.uk/browse/BARC-61) for further details.
 
@@ -88,8 +89,8 @@ See [BARC-61](https://jira.ceh.ac.uk/browse/BARC-61) for further details.
 This conventional path is currently hard-coded (as `/home/[username]/.ssh/authorized_keys`) so that role tests can
 ensure the ownership and permissions of the `.ssh` directory and `.ssh/authorized_keys` file are properly set.
 
-*This limitation is **not** considered to be significantly limiting, and a solution will not be actively pursued. Pull 
-requests addressing this will be considered however.*
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
 
 See [BARC-63](https://jira.ceh.ac.uk/browse/BARC-63) for further details.
 
@@ -98,12 +99,26 @@ See [BARC-63](https://jira.ceh.ac.uk/browse/BARC-63) for further details.
 It is not possible to indicate whether a public key should be added or removed from a users authorized_keys file. It is
 assumed keys will always be added.
 
-*This limitation is considered to be significantly limiting, and a solution will be actively pursued. Pull requests 
-to address this will be gratefully considered and given priority.*
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
 
 See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
 ## Usage
+
+### BARC manifest
+
+By default, BARC roles will record that they have been applied to a system. This is recorded using a set of 
+[Ansible local facts](http://docs.ansible.com/ansible/playbooks_variables.html#local-facts-facts-d), specifically:
+
+* `ansible_local.barc-nginx.general.role_applied` - to indicate that this role has been applied to a system
+* `ansible_local.barc-nginx.general.role_version` - to indicate the version of this this role that has been applied
+
+Note: You **SHOULD** use this feature to determine whether this role has been applied to a system.
+
+If you do not want these facts to be set by this role, you **MUST** skip the **BARC_SET_MANIFEST** tag. No support is 
+offered in this case, as other roles or use-cases may rely on this feature. Therefore you **SHOULD** not disable this
+feature.
 
 ### Public keys or passwords
 
@@ -113,8 +128,7 @@ This role supports two methods of authenticating as a user:
 2. Passwords, uses a string to authenticate, user passwords are managed by the operating system
 
 It is strongly **RECOMMENDED** to the first, public keys, option wherever feasible and is generally considered best 
-practice
-[source](http://security.stackexchange.com/questions/3887/is-using-a-public-key-for-logging-in-to-ssh-any-better-than-saving-a-password).
+practice [source](http://security.stackexchange.com/questions/3887/is-using-a-public-key-for-logging-in-to-ssh-any-better-than-saving-a-password).
 
 This role does support setting user passwords where there is no other option, however long term support by this role is
 not guaranteed and will be removed if possible in future.
@@ -124,7 +138,7 @@ not guaranteed and will be removed if possible in future.
 ```yaml
 ---
 
-- name: setup system users
+- name: configure system users
   hosts: all
   become: yes
   vars:
@@ -140,7 +154,7 @@ not guaranteed and will be removed if possible in future.
           - adm
         state: present
   roles:
-    - BARC.system-users
+    - bas-ansible-roles-collection.system-users
 ```
 
 ### Setting default options
@@ -180,12 +194,29 @@ This role uses the following tags, for all tasks:
 * [**BARC_CONFIGURE**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE)
 * [**BARC_CONFIGURE_SYSTEM**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_SYSTEM)
 * [**BARC_CONFIGURE_USERS**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_CONFIGURE_USERS)
+* [**BARC_SET_MANIFEST**](https://antarctica.hackpad.com/BARC-Standardised-Tags-AviQxxiBa3y#:h=BARC_SET_MANIFEST)
 
 ### Variables
+
+#### *BARC_role_name*
+
+* **MUST NOT** be specified
+* Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
+* See the *BARC roles manifest* section for more information
+* Example: system-users
+
+#### *BARC_role_version*
+
+* **MUST NOT** be specified
+* Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
+* See the *BARC roles manifest* section for more information
+* Example: 2.0.0
 
 #### *system_users_users*
 
 A list of operating system user accounts, and their properties, to be managed by this role.
+
+* **MAY** be specified
 
 Structured as a list of items, with each item having the following properties:
 
@@ -286,7 +317,7 @@ All changes should be committed, via pull request, to the canonical repository, 
 A mirror of this repository is maintained on GitHub. Changes are automatically pushed from the canonical repository to
 this mirror, in a one-way process.
 
-`git@github.com:antarctica/ansible-system-users.git`
+`git@github.com:bas-ansible-roles-collection/system-users.git`
 
 Note: The canonical repository is only accessible within the NERC firewall. External collaborators, please make pull 
 requests against the mirrored GitHub repository and these will be merged as appropriate.
@@ -304,6 +335,11 @@ workflow is used to manage the development of this project:
 required and merge into master with a tagged, semantic version (e.g. v1.2.3)
 * After each release, the master branch should be merged with develop to restart the process
 * High impact bugs can be addressed in hotfix branches, created from and merged into master (then develop) directly
+
+### Release procedure
+
+See [here](https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Release-procedures) for general 
+release procedures for BARC roles.
 
 ## Licence
 

@@ -1,7 +1,7 @@
 # This is an Ansible inventory file. It inherits from /etc/ansible/hosts if it exists
 # It organises hosts/nodes into logical groups which can then be used in playbooks
 
-# This inventory is for the all environments
+# This inventory is for all environments
 
 # It is best practice to group hosts by location and purpose like so:
 
