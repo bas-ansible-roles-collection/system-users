@@ -7,6 +7,13 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ## [Unreleased][unreleased]
 
+## 0.3.2 - 05/02/2016
+
+### Fixed
+
+* BARC manifest support updated to fix issues where multiple BARC roles are applied to the same machine
+* Typos in BARC manifest documentation
+
 ## 0.3.1 - 05/02/2016
 
 ### Fixed

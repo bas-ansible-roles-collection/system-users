@@ -111,13 +111,13 @@ See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 By default, BARC roles will record that they have been applied to a system. This is recorded using a set of 
 [Ansible local facts](http://docs.ansible.com/ansible/playbooks_variables.html#local-facts-facts-d), specifically:
 
-* `ansible_local.barc-nginx.general.role_applied` - to indicate that this role has been applied to a system
-* `ansible_local.barc-nginx.general.role_version` - to indicate the version of this this role that has been applied
+* `ansible_local.barc-system-users.general.role_applied` - to indicate that this role has been applied
+* `ansible_local.barc-system-users.general.role_version` - to indicate the applied version of this role
 
 Note: You **SHOULD** use this feature to determine whether this role has been applied to a system.
 
 If you do not want these facts to be set by this role, you **MUST** skip the **BARC_SET_MANIFEST** tag. No support is 
-offered in this case, as other roles or use-cases may rely on this feature. Therefore you **SHOULD** not disable this
+offered in this case, as other roles or use-cases may rely on this feature. Therefore you **SHOULD NOT** disable this
 feature.
 
 ### Public keys or passwords
@@ -198,14 +198,14 @@ This role uses the following tags, for all tasks:
 
 ### Variables
 
-#### *BARC_role_name*
+#### *system_users_barc_role_name*
 
 * **MUST NOT** be specified
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
 * Example: system-users
 
-#### *BARC_role_version*
+#### *system_users_barc_role_name*
 
 * **MUST NOT** be specified
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
@@ -303,7 +303,7 @@ Default: `[]` - an empty list
 ### Issue tracking
 
 Issues, bugs, improvements, questions, suggestions and other tasks related to this package are managed through the 
-[BAS Ansible Role Collection](https://jira.ceh.ac.uk/projects/BARC) (BARC) project on Jira.
+[BAS Ansible Roles Collection](https://jira.ceh.ac.uk/projects/BARC) (BARC) project on Jira.
 
 This service is currently only available to BAS or NERC staff, although external collaborators can be added on request.
 See our contributing policy for more information.
