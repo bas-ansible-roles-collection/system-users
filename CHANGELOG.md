@@ -7,6 +7,14 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ## [Unreleased][unreleased]
 
+### Added
+
+* Improved local fact checking for BARC manifest
+
+### Fixed
+
+* Invalid variable value for BARC manifest role name, `-`'s are not allowed
+
 ## 0.3.2 - 05/02/2016
 
 ### Fixed
