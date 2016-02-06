@@ -203,14 +203,14 @@ This role uses the following tags, for all tasks:
 * **MUST NOT** be specified
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
-* Example: system-users
+* Example: `system_users`
 
 #### *system_users_barc_role_name*
 
 * **MUST NOT** be specified
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
-* Example: 2.0.0
+* Example: `2.0.0`
 
 #### *system_users_users*
 

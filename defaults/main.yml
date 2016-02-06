@@ -2,7 +2,7 @@
 # Default variables - inventory or playbook overrides will be respected
 
 # BARC specific variables
-system_users_barc_role_name: system-users
+system_users_barc_role_name: system_users
 system_users_barc_role_version: 0.3.2
 
 # system-users specific variables
