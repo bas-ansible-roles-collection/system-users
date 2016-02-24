@@ -161,29 +161,16 @@ practice [source](http://security.stackexchange.com/questions/3887/is-using-a-pu
 This role does support setting user passwords where there is no other option, however long term support by this role is
 not guaranteed and will be removed if possible in future.
 
-### Typical playbook
+### Sudo users
 
-```yaml
----
+This role supports assigning sudo privileges to specified users by adding them to the relevant group on each supported
+operating system.
 
-- name: configure system users
-  hosts: all
-  become: yes
-  vars:
-    system_users_users:
-      -
-        username: conwat
-        comment: User account for Connie Watson
-        shell: /bin/bash
-        authorized_keys_directory: "../public_keys"
-        authorized_keys_files:
-          - "conwat_id_rsa.pub"
-        secondary_groups:
-          - adm
-        state: present
-  roles:
-    - bas-ansible-roles-collection.system-users
-```
+Although secondary group memberships are managed generally by this role, specific support for sudo users has been 
+included to make this common use-case less complicated, by removing the need to determine which group a user should be
+added to on each operating system.
+
+See [BARC-108](https://jira.ceh.ac.uk/browse/BARC-108) for background information on why this feature was added.
 
 ### Setting default options
 
@@ -212,16 +199,29 @@ system_users_users:
 [1] It is not possible to chain the `default()` and `omit` filters together, 
 e.g. `username: instance_username | default(default_username) | omit`.
 
-### Sudo users
+### Typical playbook
 
-This role supports assigning sudo privileges to specified users by adding them to the relevant group on each supported
-operating system.
+```yaml
+---
 
-Although secondary group memberships are managed generally by this role, specific support for sudo users has been 
-included to make this common use-case less complicated, by removing the need to determine which group a user should be
-added to on each operating system.
-
-See [BARC-108](https://jira.ceh.ac.uk/browse/BARC-108) for background information on why this feature was added.
+- name: configure system users
+  hosts: all
+  become: yes
+  vars:
+    system_users_users:
+      -
+        username: conwat
+        comment: User account for Connie Watson
+        shell: /bin/bash
+        authorized_keys_directory: "../public_keys"
+        authorized_keys_files:
+          - "conwat_id_rsa.pub"
+        secondary_groups:
+          - adm
+        state: present
+  roles:
+    - bas-ansible-roles-collection.system-users
+```
 
 ### Tags
 
