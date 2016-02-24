@@ -25,16 +25,18 @@ Playbooks, host variables and other support files are kept in this `tests` direc
 
 A single scenario is tested using *Continuous Integration*:
 
-* Two users are created, the first with optional settings, an authorised key and custom primary and secondary groups,
-the second, only with required options, no authorised keys and the default primary and no secondary groups
+* Two users are created, the first with optional settings, an authorised key and custom primary and secondary groups 
+and sudo privileges, the second, only with required options, no authorised keys and the default primary and no 
+secondary groups
 
 Multiple scenarios are tested *manually*:
 
 1. `test-users` - Creates two users, the first with optional settings, the second only with required options
 2. `test-users` - Creates two users, the first including an authorised key, the second without
-3. `test-remove` - Creates a new user, required options only, and removes a pre-existing user [1]
+3. `test-remove` - Creates a new user, with required options only, and removes a pre-existing user [1]
 4. `test-groups` - Creates two users, the first with custom primary and secondary groups, the second with a default
 primary group and no secondary groups [2]
+5. `test-sudo` - Creates a new user, with required options only with sudo privileges enabled 
 
 Note: Multiple scenarios may be run within the same VM, providing they do not overlap.
 

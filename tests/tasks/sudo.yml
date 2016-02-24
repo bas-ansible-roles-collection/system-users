@@ -1,0 +1,17 @@
+---
+# Tests sudo users are in members of the relevant sudo group
+
+- name: list all secondary groups a user is assigned to for users who should get sudo privileges
+  command: "id -Gn {{ item.username }}"
+  when: item.sudo is defined and item.sudo == true
+  with_items: system_users_users
+  register: system_users_test_fact_system_users_sudo_groups
+  changed_when: false
+- name: assert secondary groups are correctly set for users where secondary groups are set
+  assert:
+    that:
+      - "'{{ os_sudo_group }}' in item.1.stdout"
+  when: item.0.sudo is defined and item.0.sudo == true
+  with_together:
+    - system_users_users
+    - system_users_test_fact_system_users_sudo_groups.results

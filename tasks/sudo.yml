@@ -1,0 +1,11 @@
+---
+# Manages which operating system users have sudo privileges
+
+- name: assign sudo privileges to relevant system users
+  user:
+      name="{{ item.username }}"
+    groups="{{ os_sudo_group | default('false') }}"
+    append=yes
+     state="{{ item.state | default(omit) }}"
+  when: item.sudo is defined and item.sudo == true
+  with_items: system_users_users

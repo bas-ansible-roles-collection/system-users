@@ -13,6 +13,8 @@
 
 - include: groups.yml
 
+- include: sudo.yml
+
 - include: register-role.yml
 
 # Registration checks
@@ -23,7 +25,7 @@
 - name: assert role was applied via BARC manifest
   assert:
     that:
-      - "ansible_local.barc_php5.general.role_applied == 'true'"
+      - "ansible_local.barc_system_users.general.role_applied == 'true'"
 
 # Functionality checks
 # These checks need to run after the package or service has been configured to ensure it is working correctly,

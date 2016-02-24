@@ -1,0 +1,11 @@
+---
+# These variables override those defined by roles
+
+# system-users specific variables
+system_users_users:
+  -
+    username: conwat
+    comment: User account for Connie Watson
+    authorized_keys_files: []
+    sudo: true
+    state: present
