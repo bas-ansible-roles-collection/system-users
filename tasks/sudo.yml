@@ -6,5 +6,5 @@
       name="{{ item.username }}"
     groups="{{ os_sudo_group | default('false') }}"
      state="{{ item.state | default(omit) }}"
-  when: item.sudo == true
+  when: item.sudo is defined and item.sudo == true
   with_items: system_users_users
