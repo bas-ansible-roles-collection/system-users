@@ -7,6 +7,10 @@ Note: Developers - make sure to set the `system_users_barc_role_name` variable w
 
 ## [Unreleased][unreleased]
 
+### Changed - BREAKING!
+
+* Secondary groups now use append mode, meaning it is not possible to remove users from secondary groups using this role
+
 ### Added
 
 * Improved local fact checking for BARC manifest

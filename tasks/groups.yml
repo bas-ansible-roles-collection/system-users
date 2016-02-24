@@ -6,5 +6,6 @@
       name="{{ item.username }}"
      group="{{ item.primary_group    | default(omit) }}"
     groups="{{ item.secondary_groups | default([]) | join(',') or omit }}"
+    append=yes
      state="{{ item.state            | default(omit) }}"
   with_items: system_users_users

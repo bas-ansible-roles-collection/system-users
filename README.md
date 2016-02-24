@@ -132,6 +132,36 @@ for further details on variable precedence.
 
 See [BARC-93](https://jira.ceh.ac.uk/browse/BARC-93) for further details.
 
+* It is not possible to remove, or replace, secondary groups for a user
+
+Consider a user:
+
+```yaml
+---
+
+system_users_users:
+  -
+    username: user1
+    secondary_groups:
+      - a
+      - b
+```
+
+Secondary groups can only be accumulated using this role, meaning:
+
+* It is possible to make a *user1* a member of group *c*, through some other play
+* It is NOT possible remove *user1* from groups *a* or *b*, or *c*, if this was later added
+* It is NOT possible to replace group *a* with a group *d* for *user1* (i.e. become part of 'b', 'd' only)
+
+In the case of BAS projects this is not considered to be a big problem as secondary group changes (excluding additions, 
+which role supports) are expected to be relatively rare, and if needed would be an acceptable reason to recreate any
+affected infrastructure - or use a one-off playbook to make the required changes outside of this role.
+
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
+
+See [BARC-109](https://jira.ceh.ac.uk/browse/BARC-109) for further details.
+
 ## Usage
 
 ### BARC manifest
@@ -160,6 +190,21 @@ practice [source](http://security.stackexchange.com/questions/3887/is-using-a-pu
 
 This role does support setting user passwords where there is no other option, however long term support by this role is
 not guaranteed and will be removed if possible in future.
+
+### Secondary groups
+
+This role supports ensuring users are members of whichever secondary groups are set in the *secondary_groups* option of
+a user. If a user should be granted sudo privileges the user will also be made a member of the relevant sudo group.
+
+Secondary group assignments are cumulative and it is not possible to remove a user from a secondary group they have
+previously been a member of. A workaround for this would be to remove the user and re-add them with the reduced, or 
+altered, set of secondary groups.
+
+This is considered a limitation, see the *Limitations* section for more information.
+
+See the *Sudo users* sub-section of this section for more information on assigning users sudo privileges.
+
+Note: This does not apply to the primary group, which can only be the value of the 'primary_group' option, if specified.
 
 ### Sudo users
 
