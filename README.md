@@ -111,8 +111,8 @@ See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 By default, BARC roles will record that they have been applied to a system. This is recorded using a set of 
 [Ansible local facts](http://docs.ansible.com/ansible/playbooks_variables.html#local-facts-facts-d), specifically:
 
-* `ansible_local.barc-system_users.general.role_applied` - to indicate that this role has been applied
-* `ansible_local.barc-system_users.general.role_version` - to indicate the applied version of this role
+* `ansible_local.barc_system_users.general.role_applied` - to indicate that this role has been applied
+* `ansible_local.barc_system_users.general.role_version` - to indicate the applied version of this role
 
 Note: You **SHOULD** use this feature to determine whether this role has been applied to a system.
 

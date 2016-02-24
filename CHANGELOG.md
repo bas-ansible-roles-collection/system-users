@@ -3,7 +3,7 @@
 All notable changes to this role will be documented in this file.
 This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-Note: Developers - make sure to set the `BARC_role_version` variable when releasing new versions of this role.
+Note: Developers - make sure to set the `system_users_barc_role_name` variable when releasing new versions of this role.
 
 ## [Unreleased][unreleased]
 
@@ -14,6 +14,8 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 ### Fixed
 
 * Invalid variable value for BARC manifest role name, `-`'s are not allowed
+* Minor README typos
+* Incorrect variable name in reminder to change the role manifest version variable in the change log
 
 ## 0.3.2 - 05/02/2016
 
