@@ -7,6 +7,8 @@ Note: Developers - make sure to set the `system_users_barc_role_name` variable w
 
 ## [Unreleased][unreleased]
 
+## 1.0.0 - 24/02/2016 - BREAKING!
+
 ### Changed - BREAKING!
 
 * Secondary groups now use append mode, meaning it is not possible to remove users from secondary groups using this role
