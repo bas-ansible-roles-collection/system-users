@@ -17,6 +17,7 @@ Creates one or more operating system users with various optional attributes.
 * Optionally, adds more or more public key files to the `authorized_keys` file of a user account
 * Optionally, sets the primary group of a user account to an existing operating system group
 * Optionally, sets the secondary groups for a user account to one or more existing operating system groups
+* Optionally, adds a user account to the relevant sudo group for each operating system to grant sudo privileges
 
 ## Quality Assurance
 
@@ -104,6 +105,33 @@ assumed keys will always be added.
 
 See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
+* Some variables in this role cannot be easily overridden
+
+This specifically affects: *os_sudo_group*.
+
+Values for these variables vary on each supported operating system and therefore cannot be defined as variables in 
+`defaults/main.yml` (which are universal). Ansible does not support conditionally importing additional variables at 
+the same priority of role 'defaults' (i.e. variables defined in `defaults/main.yml`), therefore these variables must be 
+set in `vars/` within this role, and conditionally loaded using the 
+[include_vars module](http://docs.ansible.com/ansible/include_vars_module.html).
+
+Variables set at this priority cannot be easily overridden in playbooks (i.e. using the `vars` option), or in variable 
+files (i.e. using the `vars_files` option). In fact only 'extra_vars' set on the command line can override variables of
+this precedence.
+
+Given the nature of these variables, it is not expected likely users will need (or want) to changes the values for these
+variables, and therefore the difficultly needed to override them is considered an acceptable, and not significant 
+limitation. However, if other variables need to be defined in this way this may need to revisited in the future.
+
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
+
+See the 
+[Ansible Documentation](http://docs.ansible.com/ansible/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) 
+for further details on variable precedence.
+
+See [BARC-93](https://jira.ceh.ac.uk/browse/BARC-93) for further details.
+
 ## Usage
 
 ### BARC manifest
@@ -183,6 +211,17 @@ system_users_users:
 
 [1] It is not possible to chain the `default()` and `omit` filters together, 
 e.g. `username: instance_username | default(default_username) | omit`.
+
+### Sudo users
+
+This role supports assigning sudo privileges to specified users by adding them to the relevant group on each supported
+operating system.
+
+Although secondary group memberships are managed generally by this role, specific support for sudo users has been 
+included to make this common use-case less complicated, by removing the need to determine which group a user should be
+added to on each operating system.
+
+See [BARC-108](https://jira.ceh.ac.uk/browse/BARC-108) for background information on why this feature was added.
 
 ### Tags
 
@@ -287,6 +326,15 @@ Structured as a list of items, with each item having the following properties:
   * Item values **MUST** represent the name of valid group, that already exists, as determined by the operating system
   * Where no secondary groups should be added for a user, this property can be omitted
   * Example: `- adm` - of a single item within this property
+* *sudo*
+  * **MAY** be specified
+  * Specifies whether a user should be added to the relevant sudo users group to gain sudo privileges
+  * Values **MUST** use one of these options, as determined by Ansible:
+    * `true`
+    * `false`
+  * Values SHOULD NOT be quoted to prevent Ansible coercing values to a string
+  * Where a user should not have sudo privileges, this property can be omitted
+  * Default: `false`
 * *state*
   * **SHOULD** be specified
   * Specifies whether the user should be present as user, or absent
