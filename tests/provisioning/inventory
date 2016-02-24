@@ -15,6 +15,9 @@ barc-system-users-test-ubuntu-remove.v.m
 barc-system-users-test-centos-remove.v.m
 barc-system-users-test-ubuntu-groups.v.m
 barc-system-users-test-centos-groups.v.m
+barc-system-users-test-ubuntu-sudo.v.m
+barc-system-users-test-centos-sudo.v.m
+
 
 [vagrant:children]
 vagrant-test
@@ -24,11 +27,13 @@ vagrant-test
 barc-system-users-test-ubuntu-users.v.m
 barc-system-users-test-ubuntu-remove.v.m
 barc-system-users-test-ubuntu-groups.v.m
+barc-system-users-test-ubuntu-sudo.v.m
 
 [centos]
 barc-system-users-test-centos-users.v.m
 barc-system-users-test-centos-remove.v.m
 barc-system-users-test-centos-groups.v.m
+barc-system-users-test-centos-sudo.v.m
 
 
 [barc-system-users-test-users]
@@ -43,7 +48,12 @@ barc-system-users-test-centos-remove.v.m
 barc-system-users-test-ubuntu-groups.v.m
 barc-system-users-test-centos-groups.v.m
 
+[barc-system-users-test-sudo]
+barc-system-users-test-ubuntu-sudo.v.m
+barc-system-users-test-centos-sudo.v.m
+
 [barc-system-users-test-nodes:children]
 barc-system-users-test-users
 barc-system-users-test-remove
 barc-system-users-test-groups
+barc-system-users-test-sudo

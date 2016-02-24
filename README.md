@@ -17,6 +17,7 @@ Creates one or more operating system users with various optional attributes.
 * Optionally, adds more or more public key files to the `authorized_keys` file of a user account
 * Optionally, sets the primary group of a user account to an existing operating system group
 * Optionally, sets the secondary groups for a user account to one or more existing operating system groups
+* Optionally, adds a user account to the relevant sudo group for each operating system to grant sudo privileges
 
 ## Quality Assurance
 
@@ -104,6 +105,63 @@ assumed keys will always be added.
 
 See [BARC-64](https://jira.ceh.ac.uk/browse/BARC-64) for further details.
 
+* Some variables in this role cannot be easily overridden
+
+This specifically affects: *os_sudo_group*.
+
+Values for these variables vary on each supported operating system and therefore cannot be defined as variables in 
+`defaults/main.yml` (which are universal). Ansible does not support conditionally importing additional variables at 
+the same priority of role 'defaults' (i.e. variables defined in `defaults/main.yml`), therefore these variables must be 
+set in `vars/` within this role, and conditionally loaded using the 
+[include_vars module](http://docs.ansible.com/ansible/include_vars_module.html).
+
+Variables set at this priority cannot be easily overridden in playbooks (i.e. using the `vars` option), or in variable 
+files (i.e. using the `vars_files` option). In fact only 'extra_vars' set on the command line can override variables of
+this precedence.
+
+Given the nature of these variables, it is not expected likely users will need (or want) to changes the values for these
+variables, and therefore the difficultly needed to override them is considered an acceptable, and not significant 
+limitation. However, if other variables need to be defined in this way this may need to revisited in the future.
+
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
+
+See the 
+[Ansible Documentation](http://docs.ansible.com/ansible/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) 
+for further details on variable precedence.
+
+See [BARC-93](https://jira.ceh.ac.uk/browse/BARC-93) for further details.
+
+* It is not possible to remove, or replace, secondary groups for a user
+
+Consider a user:
+
+```yaml
+---
+
+system_users_users:
+  -
+    username: user1
+    secondary_groups:
+      - a
+      - b
+```
+
+Secondary groups can only be accumulated using this role, meaning:
+
+* It is possible to make a *user1* a member of group *c*, through some other play
+* It is NOT possible remove *user1* from groups *a* or *b*, or *c*, if this was later added
+* It is NOT possible to replace group *a* with a group *d* for *user1* (i.e. become part of 'b', 'd' only)
+
+In the case of BAS projects this is not considered to be a big problem as secondary group changes (excluding additions, 
+which role supports) are expected to be relatively rare, and if needed would be an acceptable reason to recreate any
+affected infrastructure - or use a one-off playbook to make the required changes outside of this role.
+
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
+
+See [BARC-109](https://jira.ceh.ac.uk/browse/BARC-109) for further details.
+
 ## Usage
 
 ### BARC manifest
@@ -133,29 +191,31 @@ practice [source](http://security.stackexchange.com/questions/3887/is-using-a-pu
 This role does support setting user passwords where there is no other option, however long term support by this role is
 not guaranteed and will be removed if possible in future.
 
-### Typical playbook
+### Secondary groups
 
-```yaml
----
+This role supports ensuring users are members of whichever secondary groups are set in the *secondary_groups* option of
+a user. If a user should be granted sudo privileges the user will also be made a member of the relevant sudo group.
 
-- name: configure system users
-  hosts: all
-  become: yes
-  vars:
-    system_users_users:
-      -
-        username: conwat
-        comment: User account for Connie Watson
-        shell: /bin/bash
-        authorized_keys_directory: "../public_keys"
-        authorized_keys_files:
-          - "conwat_id_rsa.pub"
-        secondary_groups:
-          - adm
-        state: present
-  roles:
-    - bas-ansible-roles-collection.system-users
-```
+Secondary group assignments are cumulative and it is not possible to remove a user from a secondary group they have
+previously been a member of. A workaround for this would be to remove the user and re-add them with the reduced, or 
+altered, set of secondary groups.
+
+This is considered a limitation, see the *Limitations* section for more information.
+
+See the *Sudo users* sub-section of this section for more information on assigning users sudo privileges.
+
+Note: This does not apply to the primary group, which can only be the value of the 'primary_group' option, if specified.
+
+### Sudo users
+
+This role supports assigning sudo privileges to specified users by adding them to the relevant group on each supported
+operating system.
+
+Although secondary group memberships are managed generally by this role, specific support for sudo users has been 
+included to make this common use-case less complicated, by removing the need to determine which group a user should be
+added to on each operating system.
+
+See [BARC-108](https://jira.ceh.ac.uk/browse/BARC-108) for background information on why this feature was added.
 
 ### Setting default options
 
@@ -183,6 +243,30 @@ system_users_users:
 
 [1] It is not possible to chain the `default()` and `omit` filters together, 
 e.g. `username: instance_username | default(default_username) | omit`.
+
+### Typical playbook
+
+```yaml
+---
+
+- name: configure system users
+  hosts: all
+  become: yes
+  vars:
+    system_users_users:
+      -
+        username: conwat
+        comment: User account for Connie Watson
+        shell: /bin/bash
+        authorized_keys_directory: "../public_keys"
+        authorized_keys_files:
+          - "conwat_id_rsa.pub"
+        secondary_groups:
+          - adm
+        state: present
+  roles:
+    - bas-ansible-roles-collection.system-users
+```
 
 ### Tags
 
@@ -287,6 +371,15 @@ Structured as a list of items, with each item having the following properties:
   * Item values **MUST** represent the name of valid group, that already exists, as determined by the operating system
   * Where no secondary groups should be added for a user, this property can be omitted
   * Example: `- adm` - of a single item within this property
+* *sudo*
+  * **MAY** be specified
+  * Specifies whether a user should be added to the relevant sudo users group to gain sudo privileges
+  * Values **MUST** use one of these options, as determined by Ansible:
+    * `true`
+    * `false`
+  * Values SHOULD NOT be quoted to prevent Ansible coercing values to a string
+  * Where a user should not have sudo privileges, this property can be omitted
+  * Default: `false`
 * *state*
   * **SHOULD** be specified
   * Specifies whether the user should be present as user, or absent

@@ -13,6 +13,8 @@
 
 - include: groups.yml
 
+- include: sudo.yml
+
 - include: register-role.yml
 
 # Registration checks

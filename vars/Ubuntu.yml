@@ -1,0 +1,5 @@
+---
+# Role variables - inventory or playbook overrides will not be respected - use extra-vars to override
+
+# Generic variables - for overriding all roles of a particular type (e.g. operating system, web-servers, etc.)
+os_sudo_group: sudo

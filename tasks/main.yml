@@ -1,6 +1,10 @@
 ---
 # Manages operating system users and associated configuration files and options
 
+# Load OS specific variables
+- name: load OS specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+
 - include: users.yml
   tags:
     - BARC_CONFIGURE
@@ -20,6 +24,12 @@
     - BARC_CONFIGURE_SYSTEM
 
 - include: groups.yml
+  tags:
+    - BARC_CONFIGURE
+    - BARC_CONFIGURE_USERS
+    - BARC_CONFIGURE_SYSTEM
+
+- include: sudo.yml
   tags:
     - BARC_CONFIGURE
     - BARC_CONFIGURE_USERS

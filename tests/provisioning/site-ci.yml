@@ -27,6 +27,7 @@
         primary_group: primary
         secondary_groups:
           - secondary
+        sudo: true
         state: present
       -
         username: becda
