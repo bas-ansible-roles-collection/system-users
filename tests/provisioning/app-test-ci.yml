@@ -5,6 +5,26 @@
   hosts: localhost
   remote_user: "{{ privileged_remote_user }}"
   become: yes
+  vars:
+    system_users_users:
+      -
+        username: conwat
+        uid: 1100
+        comment: Connie Watson
+        shell: /bin/bash
+        authorized_keys_files:
+          - "../tests/provisioning/data/public_keys/conwat_id_rsa.pub"
+        authorized_keys_files_contents: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCepXd+cYp7ey4gRMDvSJqFZiBKUhGV8FtfFe08gW7IwGbBwCmMvCNx3gqDIKikWMb6ZfwDAPlz4F0r7kMYNt/oCGkwQNGhgEFVdPvHOBIIIt6JQH4SqKjqDtYw9EIUVdvEGbiClcOoOk7avKsUpZmorbusIwPmwfdgnXcxKWC6+tU2ckIvqOr20VRLn012lyJQYpN22lejmsoZJVde9qvEdNY1qUI1Tj07cxEcHA25h4/i9PpBd4vVADrwQoIrBkUuMBvd4xERGhFFxl7VE2dJyjaTG8qvuh4hPc5Sld39VwfQSleRSJ6NC4nmugtDP5lYXireENXx5f5Fgj1jzcBZ conwat@bas.ac.uk"
+        primary_group: primary
+        secondary_groups:
+          - secondary
+        sudo: true
+        state: present
+      -
+        username: becda
+        state: present
+  pre_tasks:
+    - include: tasks/system-users-test-groups.yml
   roles:
     - ../../../system-users
   tasks:
