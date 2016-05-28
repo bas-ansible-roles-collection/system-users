@@ -1,8 +1,0 @@
----
-# Setup Ansible control computer (i.e. localhost)
-
-- name: run control computer setup tasks
-  hosts: localhost
-  connection: local
-  roles:
-    - BARC.prelude

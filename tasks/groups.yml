@@ -8,4 +8,4 @@
     groups="{{ item.secondary_groups | default([]) | join(',') or omit }}"
     append=yes
      state="{{ item.state            | default(omit) }}"
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"

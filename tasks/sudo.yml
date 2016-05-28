@@ -8,4 +8,4 @@
     append=yes
      state="{{ item.state | default(omit) }}"
   when: item.sudo is defined and item.sudo == true
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"

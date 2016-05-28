@@ -1,0 +1,7 @@
+---
+# Creates user which role tests will remove
+
+- name: ensure user which should be removed during tests exists for test to work
+  user:
+     name="becda"
+    state="present"

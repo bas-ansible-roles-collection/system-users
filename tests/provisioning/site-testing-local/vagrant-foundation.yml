@@ -1,0 +1,7 @@
+---
+# Brings a Vagrant managed VM to a common 'foundation' state - this only needs to be run once per host
+# In the case of Vagrant, no work is needed so this playbook does nothing
+
+- name: setup vagrant virtual machines for provisioning
+  hosts: manager--vagrant
+  remote_user: vagrant

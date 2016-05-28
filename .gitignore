@@ -1,0 +1,5 @@
+# Provisioning tool directories
+tests/provisioning/site-testing-local/.vagrant
+
+# Ansible retry files
+*.retry
