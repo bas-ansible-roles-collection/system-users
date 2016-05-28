@@ -102,5 +102,5 @@ Remember: Make sure to update system_users_barc_role_version variable when a new
 
 ### Added
 
-* Initial version - with support for users, common user properties, authorised keys (append only) and 
+* Initial version - with support for users, common user properties, authorised keys (append only) and
 groups (must pre-exist)

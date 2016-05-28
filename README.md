@@ -259,16 +259,16 @@ More information is available in the
 #### *system_users_barc_role_name*
 
 * **MUST NOT** be specified
-* Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
-* See the *BARC roles manifest* section for more information
-* Example: `system_users`
+* specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
+* see the *BARC roles manifest* section for more information
+* example: `system_users`
 
 #### *system_users_barc_role_version*
 
 * **MUST NOT** be specified
-* Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
-* See the *BARC roles manifest* section for more information
-* Example: `2.0.0`
+* specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
+* see the *BARC roles manifest* section for more information
+* example: `2.0.0`
 
 #### *system_users_users*
 
@@ -280,78 +280,78 @@ Structured as a list of items, with each item having the following properties:
 
 * *username*
   * **MUST** be specified
-  * Values **MUST** be valid user usernames, as determined by the operating system
-  * Example: `conwat`
+  * values **MUST** be valid user usernames, as determined by the operating system
+  * example: `conwat`
 * *uid*
   * **MAY** be specified
-  * Specifies whether the user should have a fixed UID, or if should be allocated by the operating system
-  * Values **MUST** be valid user UIDs, as determined by the operating system
-  * Values **SHOULD** respect operating system conventions for system/non-system users and reserved or special ranges
-  * Where not specified, the operating system will assign a suitable UID (i.e. the next in the relevant range)
-  * Specifying this property is non-default behaviour
-  * Example: `1001`
+  * specifies whether the user should have a fixed UID, or if should be allocated by the operating system
+  * values **MUST** be valid user UIDs, as determined by the operating system
+  * values **SHOULD** respect operating system conventions for system/non-system users and reserved or special ranges
+  * where not specified, the operating system will assign a suitable UID (i.e. the next in the relevant range)
+  * specifying this property is non-default behaviour
+  * example: `1001`
 * *comment*
   * **SHOULD** be specified
-  * Values **MUST** be valid user comments, as determined by the operating system
-  * Values **SHOULD** be suitably descriptive to aid other users, without being needlessly verbose
-  * Where not specified, no comment will be added
-  * Example: `User account for Connie Watson`
+  * values **MUST** be valid user comments, as determined by the operating system
+  * values **SHOULD** be suitably descriptive to aid other users, without being needlessly verbose
+  * where not specified, no comment will be added
+  * example: `User account for Connie Watson`
 * *shell*
   * **MAY** be specified
-  * Specifies the shell interpreter for a user
-  * Values **MUST** be valid shell interpreters (i.e. installed), as determined by the operating system
-  * Where not specified, the default interpreter will be used
-  * Example: `/bin/bash`
+  * specifies the shell interpreter for a user
+  * values **MUST** be valid shell interpreters (i.e. installed), as determined by the operating system
+  * where not specified, the default interpreter will be used
+  * example: `/bin/bash`
 * *authorized_keys_files*
   * **MAY** be specified where authorised keys are to be added to a user account, otherwise **MUST NOT** be specified
-  * Specifies the individual public key files that should be added the user's `authorized_keys` file
-  * The presence of this property is used to determine whether authorised keys should be managed for the user
-  * Structured as a list of items, with each item representing the path to a public key file
-  * Item values **MUST** represent a valid SSH public key file, on the Ansible control machine, as determined by SSH
-  * Where no public keys should be added for a user, this property can be set to an empty list (i.e. `[]`)
-  * Example: `- "../public/conwat_id_rsa.pub"` - of a single item within this property
+  * specifies the individual public key files that should be added the user's `authorized_keys` file
+  * the presence of this property is used to determine whether authorised keys should be managed for the user
+  * structured as a list of items, with each item representing the path to a public key file
+  * item values **MUST** represent a valid SSH public key file, on the Ansible control machine, as determined by SSH
+  * where no public keys should be added for a user, this property can be set to an empty list (i.e. `[]`)
+  * example: `- "../public/conwat_id_rsa.pub"` - of a single item within this property
 * *password*
   * **MAY** be specified
-  * Specifies the login password for the user, the value will be hashed by this role
-  * It is **NOT RECOMMENDED** to use this option, see the notes in the usage section of this role for more information
-  * Values **MUST** be valid for use as system passwords, as determined by the operating system
-  * Values **MUST** be given in plain text, care **SHOULD** be taken to suitably protect such values from disclosure
+  * specifies the login password for the user, the value will be hashed by this role
+  * it is **NOT RECOMMENDED** to use this option, see the notes in the usage section of this role for more information
+  * values **MUST** be valid for use as system passwords, as determined by the operating system
+  * values **MUST** be given in plain text, care **SHOULD** be taken to suitably protect such values from disclosure
   (i.e. by using encryption)
-  * Where not specified, no password will be set, this is **RECOMMENDED**
+  * where not specified, no password will be set, this is **RECOMMENDED**
 * *primary_group*
   * **MAY** be specified
-  * Specifies whether a pre-existing, named, group should be used for the user's primary group, or if a group named
+  * specifies whether a pre-existing, named, group should be used for the user's primary group, or if a group named
   after the user's username should be created and used
-  * Values **MUST** be the name for a valid group, that already exists, as determined by the operating system
-  * Where not specified, the operating system will create a group based on the user's username and use this as the
+  * values **MUST** be the name for a valid group, that already exists, as determined by the operating system
+  * where not specified, the operating system will create a group based on the user's username and use this as the
   primary group
-  * Specifying this property is non-default behaviour, it is much more likely you will want to use secondary groups
+  * specifying this property is non-default behaviour, it is much more likely you will want to use secondary groups
   instead
-  * Example: `foo`
+  * example: `foo`
 * *secondary_groups*
   * **MAY** be specified
-  * Specifies supplementary (secondary), pre-existing, named, groups the user should be member of
-  * Structured as a list of items, with each item representing a secondary group
-  * Item values **MUST** represent the name of valid group, that already exists, as determined by the operating system
-  * Where no secondary groups should be added for a user, this property can be omitted
-  * Example: `- adm` - of a single item within this property
+  * specifies supplementary (secondary), pre-existing, named, groups the user should be member of
+  * structured as a list of items, with each item representing a secondary group
+  * item values **MUST** represent the name of valid group, that already exists, as determined by the operating system
+  * where no secondary groups should be added for a user, this property can be omitted
+  * example: `- adm` - of a single item within this property
 * *sudo*
   * **MAY** be specified
-  * Specifies whether a user should be added to the relevant sudo users group to gain sudo privileges
-  * Values **MUST** use one of these options, as determined by Ansible:
+  * specifies whether a user should be added to the relevant sudo users group to gain sudo privileges
+  * values **MUST** use one of these options, as determined by Ansible:
     * `true`
     * `false`
-  * Values SHOULD NOT be quoted to prevent Ansible coercing values to a string
-  * Where a user should not have sudo privileges, this property can be omitted
-  * Default: `false`
+  * values SHOULD NOT be quoted to prevent Ansible coercing values to a string
+  * where a user should not have sudo privileges, this property can be omitted
+  * default: `false`
 * *state*
   * **SHOULD** be specified
-  * Specifies whether the user should be present as user, or absent
-  * Values **MUST** use one of these options, as determined by Ansible:
+  * specifies whether the user should be present as user, or absent
+  * values **MUST** use one of these options, as determined by Ansible:
     * `present`
     * `absent`
-  * Where not specified it will be assumed the user should be present
-  * Example: `present`
+  * where not specified it will be assumed the user should be present
+  * example: `present`
 
 Default: `[]` - an empty list
 
