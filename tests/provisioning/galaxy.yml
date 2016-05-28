@@ -25,4 +25,4 @@
 # As this role is part of the 'system-core' meta-role we can't depend on this.
 
 # Top level roles
-# None.
+- src: bas-ansible-roles-collection.system-hostname
