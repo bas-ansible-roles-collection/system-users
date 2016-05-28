@@ -1,0 +1,407 @@
+#!/usr/bin/env python
+#
+# Copyright 2015 Cisco Systems, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""\
+Dynamic inventory for Terraform - finds all `.tfstate` files below the working
+directory and generates an inventory based on them.
+"""
+from __future__ import unicode_literals, print_function
+import argparse
+from collections import defaultdict
+import json
+import os
+import re
+import string
+
+VERSION = '0.3.0pre'
+
+
+def tfstates(root=None):
+    root = root or os.getcwd()
+
+    for dirpath, _, filenames in os.walk(root):
+        for name in filenames:
+            if os.path.splitext(name)[-1] == '.tfstate':
+
+                # print (os.path.join(dirpath, name))
+                yield os.path.join(dirpath, name)
+
+
+def iterresources(filenames):
+    for filename in filenames:
+        with open(filename, 'r') as json_file:
+            state = json.load(json_file)
+            for module in state['modules']:
+                name = module['path'][-1]
+                for key, resource in module['resources'].items():
+                    yield name, key, resource
+
+# READ RESOURCES
+PARSERS = {}
+
+
+def _clean_dc(dcname):
+    # Consul DCs are strictly alphanumeric with underscores and hyphens -
+    # ensure that the consul_dc attribute meets these requirements.
+    return re.sub('[^\w_\-]', '-', dcname)
+
+
+def iterhosts(resources):
+    """yield host tuples of (name, attributes, groups)"""
+    for module_name, key, resource in resources:
+        resource_type, name = key.split('.', 1)
+        try:
+            parser = PARSERS[resource_type]
+        except KeyError:
+            continue
+
+        yield parser(resource, module_name)
+
+
+def parses(prefix):
+    def inner(func):
+        PARSERS[prefix] = func
+        return func
+
+    return inner
+
+
+def _parse_prefix(source, prefix, sep='.'):
+    for compkey, value in source.items():
+        try:
+            curprefix, rest = compkey.split(sep, 1)
+        except ValueError:
+            continue
+
+        if curprefix != prefix or rest == '#':
+            continue
+
+        yield rest, value
+
+
+def parse_attr_list(source, prefix, sep='.'):
+    attrs = defaultdict(dict)
+    for compkey, value in _parse_prefix(source, prefix, sep):
+        idx, key = compkey.split(sep, 1)
+        attrs[idx][key] = value
+
+    return attrs.values()
+
+
+def parse_dict(source, prefix, sep='.'):
+    return dict(_parse_prefix(source, prefix, sep))
+
+
+def parse_list(source, prefix, sep='.'):
+    return [value for _, value in _parse_prefix(source, prefix, sep)]
+
+
+def parse_bool(string_form):
+    token = string_form.lower()[0]
+
+    if token == 't':
+        return True
+    elif token == 'f':
+        return False
+    else:
+        raise ValueError('could not convert %r to a bool' % string_form)
+
+
+def parse_wsr1(hostname):
+    output = {
+        'project': None,
+        'environment': None,
+        'instance': None,
+        'node': None,
+        'purpose': None,
+        'index': None
+    }
+
+    # The list of valid values for WSR-1 environments is controlled
+    valid_environments = [
+        'dev',
+        'stage',
+        'test',
+        'demo',
+        'prod'
+    ]
+
+    # Fail immediately if there's no hostname
+    if hostname is None:
+        return output
+
+    # WSR-1 hostname's use '-' to separate elements
+    elements = string.split(hostname, '-')
+
+    # 'project', 'environment' and 'instance' are required - so if there aren't at least this many elements this
+    # hostname is not WSR-1 compliant
+    if len(elements) < 3:
+        return output
+
+    # The options for the 'environment' are a controlled list, and therefore predictable, we can then use the position
+    # of where the environment appears to workout the 'project' (which will come before the environment) and the
+    # 'instance' and 'node' which will appear afterwards
+
+    # First check a valid environment was used
+    if len(set(valid_environments).intersection(elements)) == 0:
+        return output
+
+    # Second find which environment is used and where is appears in the array
+    environment_index = False
+    for environment in valid_environments:
+        environment_index_instance = False
+
+        try:
+            environment_index_instance = elements.index(environment)
+        except ValueError:
+            pass
+
+        if environment_index_instance:
+            environment_index = environment_index_instance
+            output['environment'] = elements[environment_index]
+
+    # third determine the project by taking all elements before the environment element
+    project_elements = elements[:environment_index]
+    output['project'] = '-'.join(project_elements)
+
+    # fourth determine if there's an instance set by taking all elements after the environment element and excluding
+    # the first of these sub-elements (which is the environment) and the last element (which is the node)
+    instance_elements = elements[environment_index:]
+    instance_elements.pop(0)
+    instance_elements.pop()
+
+    if len(instance_elements) > 0:
+        output['instance'] = ' '.join(instance_elements)
+
+    # fifth take the last element as the node
+    output['node'] = elements.pop()
+
+    # sixth split the node into a purpose and index (i.e. for 'node1', purpose: 'node', index: '1')
+    node = output['node']
+    node_elements = filter(None, re.split(r'(\d+)', node))
+    if len(node_elements) == 2:
+        output['purpose'] = node_elements[0]
+        output['index'] = node_elements[1]
+
+    return output
+
+
+# Digital Ocean support was here
+
+# Soft Layer support was here
+
+# Open Stack support was here
+
+# Google Compute support was here
+
+# Azure support was here
+
+
+@parses('aws_instance')
+def aws_host(resource, module_name):
+    # Original
+    #
+    # name = resource['primary']['attributes']['tags.Name']
+    #
+    # In our case, hostname's should always be fully qualified
+    # TODO: Make FQDN domain configurable
+    name = resource['primary']['attributes']['tags.Name'] + '.ext.aws.net.nerc-bas.ac.uk'
+
+    raw_attrs = resource['primary']['attributes']
+
+    raw_wsr1_attrs = parse_wsr1(resource['primary']['attributes']['tags.Name'])
+
+    groups = []
+
+    group_attrs = {}
+
+    attrs = {
+        # 'ami': raw_attrs['ami'],
+        'identity_file': '~/.ssh/bas-aws-core-provisioning-identity'
+    }
+
+    # attrs specific to BAS
+    if 'tags.X-Managed-By' in raw_attrs:
+        group_attrs['manager'] = raw_attrs['tags.X-Managed-By'].lower()
+
+    group_attrs['provider'] = 'aws-ec2'
+
+    # attrs specific to WSR-1 hostnames
+    if 'project' in raw_wsr1_attrs:
+        if raw_wsr1_attrs['project'] is not None:
+            group_attrs['project'] = raw_wsr1_attrs['project']
+    if 'environment' in raw_wsr1_attrs:
+        if raw_wsr1_attrs['environment'] is not None:
+            group_attrs['environment'] = raw_wsr1_attrs['environment']
+    if 'instance' in raw_wsr1_attrs:
+        if raw_wsr1_attrs['instance'] is not None:
+            group_attrs['instance'] = raw_wsr1_attrs['instance']
+    if 'purpose' in raw_wsr1_attrs:
+        if raw_wsr1_attrs['purpose'] is not None:
+            group_attrs['purpose'] = raw_wsr1_attrs['purpose']
+
+    # groups specific to BAS
+    if 'manager' in group_attrs:
+        groups.append('manager--' + group_attrs['manager'])
+
+    if 'provider' in group_attrs:
+        groups.append('provider--' + group_attrs['provider'])
+
+    # groups specific to WSR-1
+    if 'project' in group_attrs:
+        groups.append('project--' + group_attrs['project'])
+
+    if 'environment' in group_attrs:
+        groups.append('env--' + group_attrs['environment'])
+
+    if 'instance' in group_attrs:
+        groups.append('instance--' + group_attrs['instance'])
+
+    if 'purpose' in group_attrs:
+        groups.append('purpose--' + group_attrs['purpose'])
+
+    return name, attrs, groups
+
+
+@parses('vsphere_virtual_machine')
+def vsphere_host(resource, module_name):
+    raw_attrs = resource['primary']['attributes']
+    network_attrs = parse_dict(raw_attrs, 'network_interface')
+    network = parse_dict(network_attrs, '0')
+    ip_address = network.get('ipv4_address', network['ip_address'])
+    name = raw_attrs['name']
+    groups = []
+
+    attrs = {
+        'id': raw_attrs['id'],
+        'ip_address': ip_address,
+        'private_ipv4': ip_address,
+        'public_ipv4': ip_address,
+        'metadata': parse_dict(raw_attrs, 'custom_configuration_parameters'),
+        'ansible_ssh_port': 22,
+        'provider': 'vsphere',
+    }
+
+    try:
+        attrs.update({
+            'ansible_ssh_host': ip_address,
+        })
+    except (KeyError, ValueError):
+        attrs.update({'ansible_ssh_host': '', })
+
+    attrs.update({
+        'consul_dc': _clean_dc(attrs['metadata'].get('consul_dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin', 'python')
+    })
+
+    # attrs specific to Ansible
+    if 'ssh_user' in attrs['metadata']:
+        attrs['ansible_ssh_user'] = attrs['metadata']['ssh_user']
+
+    groups.append('role=' + attrs['role'])
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
+
+
+# QUERY TYPES
+def query_host(hosts, target):
+    for name, attrs, _ in hosts:
+        if name == target:
+            return attrs
+
+    return {}
+
+
+def query_list(hosts):
+    groups = defaultdict(dict)
+    meta = {}
+
+    for name, attrs, hostgroups in hosts:
+        for group in set(hostgroups):
+            groups[group].setdefault('hosts', [])
+            groups[group]['hosts'].append(name)
+
+        meta[name] = attrs
+
+    groups['_meta'] = {'hostvars': meta}
+    return groups
+
+
+def query_hostfile(hosts):
+    out = ['## begin hosts generated by terraform.py ##']
+    out.extend(
+        '{}\t{}'.format(attrs['ansible_ssh_host'].ljust(16), name)
+        for name, attrs, _ in hosts
+    )
+
+    out.append('## end hosts generated by terraform.py ##')
+    return '\n'.join(out)
+
+
+# TODO: Make the 'site-production' path configurable
+def main():
+    parser = argparse.ArgumentParser(
+        __file__, __doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--list',
+                       action='store_true',
+                       help='list all variables')
+    modes.add_argument('--host', help='list variables for a single host')
+    modes.add_argument('--version',
+                       action='store_true',
+                       help='print version and exit')
+    modes.add_argument('--hostfile',
+                       action='store_true',
+                       help='print hosts as a /etc/hosts snippet')
+    parser.add_argument('--pretty',
+                        action='store_true',
+                        help='pretty-print output JSON')
+    parser.add_argument('--nometa',
+                        action='store_true',
+                        help='with --list, exclude hostvars')
+    default_root = os.environ.get('TERRAFORM_STATE_ROOT',
+                                  os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'site-production', )))
+    parser.add_argument('--root',
+                        default=default_root,
+                        help='custom root to search for `.tfstate`s in')
+
+    args = parser.parse_args()
+
+    if args.version:
+        print('%s %s' % (__file__, VERSION))
+        parser.exit()
+
+    hosts = iterhosts(iterresources(tfstates(args.root)))
+
+    if args.list:
+        output = query_list(hosts)
+        if args.nometa:
+            del output['_meta']
+        print(json.dumps(output, indent=4 if args.pretty else None))
+    elif args.host:
+        output = query_host(hosts, args.host)
+        print(json.dumps(output, indent=4 if args.pretty else None))
+    elif args.hostfile:
+        output = query_hostfile(hosts)
+        print(output)
+
+    parser.exit()
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,10 @@
+---
+# Creates secondary groups which users configured role tests will be members of
+
+- name: ensure groups user will be assigned to exist for test to work
+  group:
+     name="{{ item }}"
+    state=present
+  with_items:
+    - "primary"
+    - "secondary"

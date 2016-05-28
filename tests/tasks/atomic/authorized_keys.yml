@@ -1,0 +1,76 @@
+---
+# Tests operating system users authorized_keys can be managed
+
+- name: determine status of users ssh directory
+  stat: path="/home/{{ item.username }}/.ssh"
+  register: system_users_test_fact_system_users_ssh_directories
+  when: item.authorized_keys_directory is defined
+  changed_when: false
+  with_items: "{{ system_users_users }}"
+- name: assert users ssh directory has the correct ownership and permissions
+  assert:
+    that:
+      - "item.1.stat is defined"
+      - "item.1.stat.exists == true"
+      - "item.1.stat.mode == '0700'"
+      - "item.1.stat.pw_name == '{{ item.0.username }}'"
+      - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
+  when: item.0.authorized_keys_directory is defined
+  with_together:
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_ssh_directories.results }}"
+
+- name: determine status of users authorized_keys file
+  stat: path="/home/{{ item.username }}/.ssh/authorized_keys"
+  register: system_users_test_fact_system_users_authorized_keys
+  when: item.authorized_keys_directory is defined
+  changed_when: false
+  with_items: "{{ system_users_users }}"
+- name: assert users authorized_keys file has the correct ownership and permissions
+  assert:
+    that:
+      - "item.1.stat is defined"
+      - "item.1.stat.exists == true"
+      - "item.1.stat.mode == '0600'"
+      - "item.1.stat.pw_name == '{{ item.0.username }}'"
+      - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
+  when: item.0.authorized_keys_directory is defined
+  with_together:
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_authorized_keys.results }}"
+
+# This test is a slight hack because we can't dynamically get the value of all the public keys that should be added to
+# a users authorized_keys file. Ideally we would make an assertion that the contents of each of these public keys is
+# present in the contents of that file. However this isn't possible because we can't do something like this:
+#
+# with_together:
+#  - with_subelements:
+#    - system_users_users
+#    - authorized_keys_files
+#  - system_users_test_fact_system_users_authorized_keys_contents.results
+#
+# In order for us to test the given public keys were added it is necessary, when testing, to tell Ansible what the
+# contents of the authorized_keys file should be and then compare the actual output in an assertion.
+#
+# Note that this 'pre-given value' needs to include all the public keys (if multiple keys are added) as its not
+# possible to use a sub-element for each public key for the same reason we can't load the file's contents directly as
+# we do when actually adding the keys.
+#
+# Since this issue is limited to testing, it is not considered a priority to fix, though pull-requests which do so
+# would be gratefully received.
+
+- name: get contents of users authorized_keys file
+  command: "cat /home/{{ item.username }}/.ssh/authorized_keys"
+  # become_user: "{{ item.username }}"
+  register: system_users_test_fact_system_users_authorized_keys_contents
+  when: item.authorized_keys_directory is defined
+  changed_when: false
+  with_items: "{{ system_users_users }}"
+- name: assert users authorized_keys file has the correct contents
+  assert:
+    that:
+      - "'{{ item.0.authorized_keys_files_contents }}' in item.1.stdout"
+  when: item.0.authorized_keys_directory is defined
+  with_together:
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_authorized_keys_contents.results }}"

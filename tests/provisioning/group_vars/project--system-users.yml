@@ -1,0 +1,10 @@
+---
+# These variables override those defined by roles
+
+# App variables - apply to a single project
+app_project: "system-users"
+app_project_repository: ""
+app_project_directory: "/srv/apps/{{ app_project }}"
+
+# BAS Systems Inventory variables
+bas_systems_inventory_system_reference: "{{ app_project }}"

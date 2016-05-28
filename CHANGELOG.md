@@ -3,9 +3,25 @@
 All notable changes to this role will be documented in this file.
 This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-Note: Developers - make sure to set the `system_users_barc_role_name` variable when releasing new versions of this role.
+Remember: Make sure to update system_users_barc_role_version variable when a new version is released.
 
 ## [Unreleased][unreleased]
+
+## 2.0.0 - 28/05/2016 - BREAKING!
+
+### Changed - BREAKING!
+
+* `authorised_keys_files` is now optional, and is used to detect if authorised keys should be managed for a user
+
+### Removed - BREAKING!
+
+* `authorized_keys_directory` option removed as the full path is now used for authorised keys
+
+## Changed
+
+* Updating role to use Pristine project template - BARC flavour, version 0.3.0
+* Updating role to address Ansible 2.x deprecations
+* Ignoring `.retry` files
 
 ## 1.0.0 - 24/02/2016 - BREAKING!
 
@@ -89,5 +105,5 @@ Note: Developers - make sure to set the `system_users_barc_role_name` variable w
 
 ### Added
 
-* Initial version - with support for users, common user properties, authorised keys (append only) and 
+* Initial version - with support for users, common user properties, authorised keys (append only) and
 groups (must pre-exist)

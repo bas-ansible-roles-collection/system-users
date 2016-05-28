@@ -1,0 +1,5 @@
+---
+# These variables override those defined by roles
+
+# Infrastructure variables - apply to types of infrastructure
+privileged_remote_user: terraform

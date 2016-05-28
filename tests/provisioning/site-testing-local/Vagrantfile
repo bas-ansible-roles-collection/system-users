@@ -1,0 +1,77 @@
+# Vagrant configuration
+  # Ruby syntax highlighting can be used for this file, as can regular ruby code.
+  # Options using 'config' apply to all VMs
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.require_version ">= 1.8.1"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Port forwarding
+    # Disables Vagrant's default behaviour of forwarding default SSH port
+  config.vm.network "forwarded_port", id: "ssh", guest: 22, host: 2222, auto_correct: true, disabled: true
+
+  # Network adapters
+    # DHCP is used to prevent clashes with other projects
+    # If you need to share a vagrant VM with someone else it is recommended to use 'vagrant share',
+    # rather than use public networking, as the security of development environments is often low.
+  config.vm.network "private_network", type: "dhcp"  # Define Networking
+
+  # Automatic hostname registration via the Landrush plugin
+  config.landrush.enabled = true
+  config.landrush.tld = 'v.m'
+
+  # Shared folders
+    # /vagrant is not used to ensure consistency across environments [development/staging/production]
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Virtual machine definitions
+    # Options using 'node' apply to a single VM only
+    # For BAS projects, the hostname **MUST** be the FQDN and comply with WSR-1, e.g. project-environment-purpose.v.m
+    # the identifier **MUST** be the same as the hostname, without a domain, e.g. project-environment-purpose
+  config.vm.define "system-users-test-ubuntu-basic" do |node|
+    node.vm.hostname = "system-users-test-ubuntu-basic.v.m"
+
+    # Base box
+    node.vm.box = "antarctica/trusty"
+    node.vm.box_version = "~> 3.3"
+  end
+
+  config.vm.define "system-users-test-centos-basic" do |node|
+    node.vm.hostname = "system-users-test-centos-basic.v.m"
+
+    # Base box
+    node.vm.box = "antarctica/centos7"
+    node.vm.box_version = "~> 0.7"
+  end
+
+  config.vm.define "system-users-test-ubuntu-remove" do |node|
+    node.vm.hostname = "system-users-test-ubuntu-remove.v.m"
+
+    # Base box
+    node.vm.box = "antarctica/trusty"
+    node.vm.box_version = "~> 3.3"
+  end
+
+  config.vm.define "system-users-test-centos-remove" do |node|
+    node.vm.hostname = "system-users-test-centos-remove.v.m"
+
+    # Base box
+    node.vm.box = "antarctica/centos7"
+    node.vm.box_version = "~> 0.7"
+
+    # Provision all virtual machines using Ansible to get to a common 'foundation'
+      # We also download all roles required fro this project using Ansible Galaxy
+      #
+      # Due to a bug in Vagrant this provisioner MUST be defined in the LAST virtual machine
+      # Source: https://github.com/mitchellh/vagrant/issues/1784
+    node.vm.provision "ansible" do |ansible|
+      ansible.limit = "all"
+      ansible.inventory_path = "../inventories"
+      ansible.galaxy_role_file = "../galaxy.yml"
+      ansible.galaxy_roles_path = "../roles"
+      ansible.playbook = "vagrant-foundation.yml"
+    end
+  end
+end
