@@ -7,6 +7,8 @@ Remember: Make sure to update system_users_barc_role_version variable when a new
 
 ## [Unreleased][unreleased]
 
+## 2.0.0 - 28/05/2016 - BREAKING!
+
 ### Changed - BREAKING!
 
 * `authorised_keys_files` is now optional, and is used to detect if authorised keys should be managed for a user
