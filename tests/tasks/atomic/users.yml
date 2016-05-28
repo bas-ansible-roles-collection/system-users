@@ -9,13 +9,13 @@
   assert:
     that:
       - "'{{ item.username }}' in '{{ system_users_test_fact_system_users_usernames.stdout }}'"
-  when: "'{{ item.state }}' == 'present'"
+  when: item.state == "present"
   with_items: "{{ system_users_users }}"
 - name: assert undesired user does not exist
   assert:
     that:
       - "'{{ item.username }}' not in '{{ system_users_test_fact_system_users_usernames.stdout }}'"
-  when: "'{{ item.state }}' == 'absent'"
+  when: item.state == "absent"
   with_items: "{{ system_users_users }}"
 
 - name: list uids for all system users
@@ -26,7 +26,7 @@
   assert:
     that:
       - "'{{ item.username }}:{{ item.uid }}' in '{{ system_users_test_fact_system_users_uids.stdout }}'"
-  when: "'{{ item.uid }}' is defined"
+  when: item.uid is defined
   with_items: "{{ system_users_users }}"
 
 - name: list comments for all system users
@@ -37,7 +37,7 @@
   assert:
     that:
       - "'{{ item.username }}:{{ item.comment }}' in '{{ system_users_test_fact_system_users_comments.stdout }}'"
-  when: "'{{ item.comment }}' is defined"
+  when: item.comment is defined
   with_items: "{{ system_users_users }}"
 
 - name: list shells for all system users
@@ -48,5 +48,5 @@
   assert:
     that:
       - "'{{ item.username }}:{{ item.shell }}' in '{{ system_users_test_fact_system_users_shells.stdout }}'"
-  when: "'{{ item.shell }}' is defined"
+  when: item.shell is defined
   with_items: "{{ system_users_users }}"
