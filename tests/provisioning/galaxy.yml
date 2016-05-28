@@ -22,5 +22,7 @@
 # Note: BARC roles **MUST NOT** pin roles, except in exceptional circumstances.
 # Source: https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Version-pinning-policy
 
+# As this role is part of the 'system-core' meta-role we can't depend on this.
+
 # Top level roles
-- src: bas-ansible-roles-collection.system-core
+# None.
