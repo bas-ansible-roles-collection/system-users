@@ -1,6 +1,6 @@
 # License
 
-Copyright 2015 NERC BAS.
+Copyright 2016 NERC BAS.
 
 Unless stated otherwise, all documentation is licensed under the Open Government License - version 3. All code is
 licensed under the MIT license.

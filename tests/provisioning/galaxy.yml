@@ -1,0 +1,26 @@
+---
+# Specifies Ansible Galaxy roles used in this project
+#
+# The order of roles in this file does not control in which order they are applied to hosts, playbooks control this.
+# Source: http://docs.ansible.com/ansible/galaxy.html#advanced-control-over-role-requirements-files
+
+# Role dependencies
+#
+# For roles available from Ansible Galaxy, you do not need to install dependencies, but you may want to (see below).
+# For other roles, you will need to manually resolve any dependencies by listing them in this file.
+
+# Role dependency pinning
+#
+# If you are using roles which specify dependencies, you may wish to 'pin' the versions of these dependencies in
+# this file. This will require you to list all such dependencies here, along with the version you wish to pin to, as
+# you would with 'top-level' roles.
+#
+# Without pinning the latest available version of each dependency will be installed. As projects age, newer versions of
+# dependencies will be released, which will inveterately contain breaking changes, this can lead to unintended
+# provisioning failures.
+#
+# Note: BARC roles **MUST NOT** pin roles, except in exceptional circumstances.
+# Source: https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Version-pinning-policy
+
+# Top level roles
+- src: bas-ansible-roles-collection.system-core

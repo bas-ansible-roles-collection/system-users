@@ -1,0 +1,9 @@
+---
+# Setup infrastructure for testing a role
+
+# As this role is a dependency of the 'system-core' role we don't specify it here.
+
+- name: setup nodes for role tests
+  hosts: project--system-users:&env--test-local
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes

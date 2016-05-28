@@ -1,0 +1,11 @@
+---
+# Run tests for role
+
+- name: run role tests
+  hosts: localhost
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes
+  roles:
+    - ../../../system-users
+  tasks:
+    - include: ../tasks/main.yml

@@ -1,0 +1,29 @@
+---
+# Run tests for role
+
+- name: prepare nodes where a user is added to a series of pre-existing groups
+  hosts:
+    - system-users-test-ubuntu-basic.v.m
+    - system-users-test-centos-basic.v.m
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes
+  tasks:
+    - include: tasks/system-users-test-groups.yml
+
+- name: prepare nodes where a user is removed
+  hosts:
+    - system-users-test-ubuntu-remove.v.m
+    - system-users-test-centos-remove.v.m
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes
+  tasks:
+    - include: tasks/system-users-test-remove.yml
+
+- name: apply role and run tests
+  hosts: project--system-users:&env--test-local
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes
+  roles:
+    - ../../../system-users
+  tasks:
+    - include: ../tasks/main.yml

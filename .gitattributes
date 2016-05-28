@@ -1,5 +1,7 @@
-# Remove files from releases using `git archive`
+# Remove files from uses of this project template when using `git archive`
 .gitattributes export-ignore
+.gitignore export-ignore
+.editorconfig export-ignore
 tests export-ignore
 
 # GitHub linguist specific customisations (to improve language statistics)

@@ -3,10 +3,13 @@
 All notable changes to this role will be documented in this file.
 This role adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-Note: Developers - make sure to set the `system_users_barc_role_name` variable when releasing new versions of this role.
+Remember: Make sure to update system_users_barc_role_version variable when a new version is released.
 
 ## [Unreleased][unreleased]
 
+## Changed
+
+* Updating role to use Pristine project template - BARC flavour, version 0.2.0
 ## 1.0.0 - 24/02/2016 - BREAKING!
 
 ### Changed - BREAKING!

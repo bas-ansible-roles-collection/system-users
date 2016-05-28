@@ -11,5 +11,5 @@ they do not represent any formal policy or notice
 
 * Follow any defined coding standards where specified, or any obvious conventions implied within the code
 
-Last updated: November 2015
-Contact address: basweb@bas.ac.uk (BAS Web & Applications Team)
+Last updated: February 2016
+Contact address: webapps@bas.ac.uk (BAS Web & Applications Team)
