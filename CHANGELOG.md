@@ -7,6 +7,14 @@ Remember: Make sure to update system_users_barc_role_version variable when a new
 
 ## [Unreleased][unreleased]
 
+### Changed - BREAKING!
+
+* `authorised_keys_files` is now optional, and is used to detect if authorised keys should be managed for a user
+
+### Removed - BREAKING!
+
+* `authorized_keys_directory` option removed as the full path is now used for authorised keys
+
 ## Changed
 
 * Updating role to use Pristine project template - BARC flavour, version 0.2.0

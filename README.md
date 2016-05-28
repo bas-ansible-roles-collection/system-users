@@ -302,24 +302,14 @@ Structured as a list of items, with each item having the following properties:
   * Values **MUST** be valid shell interpreters (i.e. installed), as determined by the operating system
   * Where not specified, the default interpreter will be used
   * Example: `/bin/bash`
-* *authorized_keys_directory*
-  * **MAY** be specified if it desired for authorised keys to a added to a user account, otherwise this **MUST NOT** be 
-  specified
-  * Specifies in which directory the public key files indicated by the *authorized_keys_files* property are located
-  * The presence of this property is used to determine whether authorised keys should be managed for the user, i.e. if
-  this property is defined, the values in the *authorized_keys_files* property will be used
-  * Values **MUST** represent a valid path to a directory, on the Ansible control machine (i.e. localhost), 
-  values **MUST** not use a trailing directory separator (i.e. `/`)
-  * Example `../public_keys` - assuming this role is within a `roles` directory, this would point to a `public_keys` 
-  directory that sits alongside the roles directory
 * *authorized_keys_files*
-  * **MUST** be specified as a property (see limitations above), however items **MAY** be specified 
+  * **MAY** be specified where authorised keys are to be added to a user account, otherwise **MUST NOT** be specified
   * Specifies the individual public key files that should be added the user's `authorized_keys` file
-  * Structured as a list of items, with each item representing the file name of a public key file
-  * Item values **MUST** represent valid file names for valid SSH public key files, as determined by SSH, located within 
-  the directory set by the *authorized_keys_directory* property
+  * The presence of this property is used to determine whether authorised keys should be managed for the user
+  * Structured as a list of items, with each item representing the path to a public key file
+  * Item values **MUST** represent a valid SSH public key file, on the Ansible control machine, as determined by SSH
   * Where no public keys should be added for a user, this property can be set to an empty list (i.e. `[]`)
-  * Example: `- "conwat_id_rsa.pub"` - of a single item within this property
+  * Example: `- "../public/conwat_id_rsa.pub"` - of a single item within this property
 * *password*
   * **MAY** be specified
   * Specifies the login password for the user, the value will be hashed by this role

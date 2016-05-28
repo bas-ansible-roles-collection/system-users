@@ -1,17 +1,16 @@
 ---
 # Manages authorized_keys for system users
 
-# This task uses sub-element looping to access the items that the 'authorized_keys_files' list contains.
-# More information is available here: http://docs.ansible.com/ansible/playbooks_loops.html#looping-over-subelements
+# This task uses conditional sub-element looping to access the items that the 'authorized_keys_files' list contains.
+# More information is available here: http://stackoverflow.com/a/31145937
 
-# A file lookup is used to take the contents of each of the file paths specified by the user. This prevents users
-# specifying the public keys directly, this and the hard coded directory building are both known limitations.
+# A file lookup is used to take the contents of each of the file paths specified by 'authorized_keys_files'.
+# This prevents users the contents of keys directly.
 
 - name: set authorised keys for system user
   authorized_key:
     user="{{ item.0.username }}"
-     key="{{ lookup('file', item.0.authorized_keys_directory + '/' + item.1) }}"
-  when: item.0.authorized_keys_directory is defined
+     key="{{ lookup('file', item.1) }}"
   with_subelements:
-    - system_users_users
+    - "{{ system_users_users | selectattr('authorized_keys_files', 'defined') | list }}"
     - authorized_keys_files
