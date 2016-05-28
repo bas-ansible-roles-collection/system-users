@@ -19,6 +19,7 @@ Remember: Make sure to update system_users_barc_role_version variable when a new
 
 * Updating role to use Pristine project template - BARC flavour, version 0.3.0
 * Updating role to address Ansible 2.x deprecations
+* Ignoring `.retry` files
 
 ## 1.0.0 - 24/02/2016 - BREAKING!
 
