@@ -2,11 +2,11 @@
 # Tests operating system users authorized_keys can be managed
 
 - name: determine status of users ssh directory
-  stat: path="/home/{{ item.username }}"/.ssh
+  stat: path="/home/{{ item.username }}/.ssh"
   register: system_users_test_fact_system_users_ssh_directories
   when: item.authorized_keys_directory is defined
   changed_when: false
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"
 - name: assert users ssh directory has the correct ownership and permissions
   assert:
     that:
@@ -17,15 +17,15 @@
       - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
   when: item.0.authorized_keys_directory is defined
   with_together:
-    - system_users_users
-    - system_users_test_fact_system_users_ssh_directories.results
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_ssh_directories.results }}"
 
 - name: determine status of users authorized_keys file
-  stat: path="/home/{{ item.username }}"/.ssh/authorized_keys
+  stat: path="/home/{{ item.username }}/.ssh/authorized_keys"
   register: system_users_test_fact_system_users_authorized_keys
   when: item.authorized_keys_directory is defined
   changed_when: false
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"
 - name: assert users authorized_keys file has the correct ownership and permissions
   assert:
     that:
@@ -36,8 +36,8 @@
       - "item.1.stat.gr_name == '{{ item.0.primary_group | default(item.0.username) }}'"
   when: item.0.authorized_keys_directory is defined
   with_together:
-    - system_users_users
-    - system_users_test_fact_system_users_authorized_keys.results
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_authorized_keys.results }}"
 
 # This test is a slight hack because we can't dynamically get the value of all the public keys that should be added to
 # a users authorized_keys file. Ideally we would make an assertion that the contents of each of these public keys is
@@ -61,16 +61,16 @@
 
 - name: get contents of users authorized_keys file
   command: "cat /home/{{ item.username }}/.ssh/authorized_keys"
-  become_user: "{{ item.username }}"
+  # become_user: "{{ item.username }}"
   register: system_users_test_fact_system_users_authorized_keys_contents
   when: item.authorized_keys_directory is defined
   changed_when: false
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"
 - name: assert users authorized_keys file has the correct contents
   assert:
     that:
       - "'{{ item.0.authorized_keys_files_contents }}' in item.1.stdout"
   when: item.0.authorized_keys_directory is defined
   with_together:
-    - system_users_users
-    - system_users_test_fact_system_users_authorized_keys_contents.results
+    - "{{ system_users_users }}"
+    - "{{ system_users_test_fact_system_users_authorized_keys_contents.results }}"

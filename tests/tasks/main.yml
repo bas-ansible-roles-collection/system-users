@@ -1,34 +1,37 @@
 ---
-# Tests the creation and configuration of operating system users created by this role
+# Tests ...
 
-# Management and configuration checks
-# These checks mirror individual tasks to ensure they execute correctly
-# (I.e. that they create a user in the right package or create the correct config file)
+# Flush handlers
+#
+# This ensures any pending handlers are executed before any tests are performed. This is particularly important where
+# a service needs to be restarted before new configuration options are used for example.
 
-# Core configuration
+- meta: flush_handlers
 
-- include: users.yml
-
-- include: authorized_keys.yml
-
-- include: groups.yml
-
-- include: sudo.yml
-
-- include: register-role.yml
-
-# Registration checks
-# This check ensures the Ansible local facts set by this role when it has been applied exist and use the correct value
+# Reload local facts
+#
+# This ensures any Ansible local facts registered by tasks in the current playbook are loaded and so can be tested.
 
 - action: setup
 
-- name: assert role was applied via BARC manifest
-  assert:
-    that:
-      - "ansible_local.barc_system_users.general.role_applied == 'true'"
+# Atomic tests
+#
+# These tests mirror individual tasks to ensure they execute correctly
+# E.g. creating a user, installing the right package or generating a valid configuration file
 
-# Functionality checks
-# These checks need to run after the package or service has been configured to ensure it is working correctly,
-# using an configuration that may have been set by this role.
+- include: atomic/users.yml
 
-# There are no functionality checks for this role
+- include: atomic/authorized_keys.yml
+
+- include: atomic/groups.yml
+
+- include: atomic/sudo.yml
+
+- include: atomic/register-role.yml
+
+# Functionality tests
+#
+# These tests ensure overall processes can be completed to give a valid result
+# E.g. checking a web-server serves a web-page ensures the relevant packages and configuration files work together
+
+- include: functionality/barc-manifest.yml

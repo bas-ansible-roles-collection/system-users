@@ -8,4 +8,4 @@
     comment="{{ item.comment | default(omit) }}"
       shell="{{ item.shell   | default(omit) }}"
       state="{{ item.state   | default(omit) }}"
-  with_items: system_users_users
+  with_items: "{{ system_users_users }}"

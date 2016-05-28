@@ -1,0 +1,11 @@
+# ---
+# These variables override those defined by roles and group_vars
+
+# system-users variables
+system_users_users:
+  -
+    username: conwat
+    state: present
+  -
+    username: becda
+    state: absent

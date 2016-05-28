@@ -5,7 +5,8 @@
   command: "cat /etc/ansible/facts.d/barc_{{ system_users_barc_role_name }}.fact"
   changed_when: false
   register: system_users_test_fact_ansible_local_fact_contents
+
 - name: assert local fact file was generated correctly
   assert:
     that:
-      - "'role_applied=true' in system_users_test_fact_ansible_local_fact_contents.stdout"
+      - "'role_applied=true' in '{{ system_users_test_fact_ansible_local_fact_contents.stdout }}'"

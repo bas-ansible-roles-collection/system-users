@@ -1,0 +1,7 @@
+---
+# Checks Ansible local facts have been set correctly to determine if this role has been applied correctly
+
+- name: assert role was applied via BARC manifest
+  assert:
+    that:
+      - "{{ ansible_local.barc_system_users.general.role_applied }} == true"
