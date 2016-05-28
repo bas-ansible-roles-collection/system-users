@@ -7,7 +7,7 @@ Creates one or more operating system users with various optional attributes.
 
 **Part of the BAS Ansible Role Collection (BARC)**
 
-**This role uses version 0.2.0 of the BARC flavour of the BAS Base Project - Pristine**.
+**This role uses version 0.3.0 of the BARC flavour of the BAS Base Project - Pristine**.
 
 ## Overview
 
