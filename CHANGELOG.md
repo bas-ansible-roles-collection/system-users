@@ -7,6 +7,10 @@ Remember: Make sure to update system_users_barc_role_version variable when a new
 
 ## [Unreleased][unreleased]
 
+### Fixed
+
+* Stale build version in Semaphore
+
 ## 2.0.0 - 28/05/2016 - BREAKING!
 
 ### Fixed
